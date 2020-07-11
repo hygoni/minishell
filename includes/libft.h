@@ -6,7 +6,7 @@
 /*   By: hyeyoo <9hrack@gmail.com>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 14:59:42 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/11 15:21:12 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/11 17:53:44 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ void			ft_putnbr_fd(int n, int fd);
 void			ft_putnbr_buf(int n, char *buf, size_t *i);
 void			ft_putstr(char *str);
 void			ft_putchar(char c);
+void			ft_putstr_endl(char *str);
 
 #endif
