@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:45:34 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/12 16:07:42 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/12 16:51:44 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,65 +17,47 @@
 #include "constant.h"
 #include "libft.h"
 #include "ft_environ.h"
+#include "error.h"
 
 #define TOO_MANY_ARGUMENTS		"too many arguments"
 #define BAD_OPTION				"bad option"
 #define EXE_NAME				"pwd"
 #define PWD						"PWD"
 
-void	error_too_many_arguments(void)
+int		option(char *argument, int *is_physical, char *param)
 {
-	ft_putstr(EXE_NAME);
-	ft_putstr(": ");
-	ft_putstr(TOO_MANY_ARGUMENTS);
-	ft_putchar('\n');
-	exit(EXIT_FAILURE);
-}
-
-void	error_bad_option(char param)
-{
-	ft_putstr(EXE_NAME);
-	ft_putstr(": ");
-	ft_putstr(BAD_OPTION);
-	ft_putstr(": -");
-	ft_putchar(param);
-	ft_putchar('\n');
-	exit(EXIT_FAILURE);
-}
-
-int		option(char *argument)
-{
-	int		is_physical;
-
-	is_physical = FALSE;
+	param[0] = '-';
+	param[2] = '\0';
 	argument++;
 	while (*argument != '\0')
 	{
+		param[1] = *argument;
 		if (*argument == 'L')
-			is_physical = (is_physical) ? TRUE : FALSE;
+			*is_physical = (*is_physical) ? TRUE : FALSE;
 		else if (*argument == 'P')
-			is_physical = TRUE;
+			*is_physical = TRUE;
 		else
-			error_bad_option(*argument);
+			return (FALSE);
 		argument++;
 	}
-	return (is_physical);
+	return (TRUE);
 }
 
-void	pwd(int argc, char **argv, char **environ)
+int		pwd(int argc, char **argv, char **environ)
 {
 	int		i;
 	int		is_physical;
 	char	buf[PATH_MAX + 1];
+	char	param[3];
 
 	is_physical = FALSE;
 	i = 1;
 	while (i < argc)
 	{
 		if (*(argv[i]) != '-')
-			error_too_many_arguments();
-		else
-			is_physical = is_physical | option(argv[i]);
+			return (error_msg(EXE_NAME, TOO_MANY_ARGUMENTS));
+		else if (option(argv[i], &is_physical, param) == FALSE)
+			return (error_msg_param(EXE_NAME, BAD_OPTION, param));
 		i++;
 	}
 	if (is_physical)
@@ -84,7 +66,6 @@ void	pwd(int argc, char **argv, char **environ)
 		ft_putstr_endl(buf);
 	}
 	else
-	{
 		ft_putstr_endl(get_env_value(environ, PWD));
-	}
+	return (EXIT_SUCCESS);
 }
