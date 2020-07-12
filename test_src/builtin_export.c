@@ -6,13 +6,14 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 05:34:00 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/12 15:39:02 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "ft_environ.h"
 #include "libft.h"
 
 int		add_env(char *key, char *value)
@@ -39,21 +40,20 @@ int		check_key_value(char *str)
 		return (1);
 }
 
-char	*get_key(char *str)
+int		set_key(char *str, char **key)
 {
-	char	*result;
 	int		end;
 
 	end = 0;
 	while (str[end] != '=')
 		end++;
-	result = ft_substr(str, 0, end);
-	return (result);
+	if ((*key = ft_substr(str, 0, end)) == 0)
+		return (0);
+	return (1);
 }
 
-char	*get_value(char *str)
+int		set_value(char *str, char **value)
 {
-	char	*result;
 	int		start;
 	int		len;
 
@@ -62,8 +62,9 @@ char	*get_value(char *str)
 		start++;
 	start++;
 	len = ft_strlen(str);
-	result = ft_substr(str, start, len - start);
-	return (result);
+	if ((*value = ft_substr(str, start, len - start)) == 0)
+		return (0);
+	return (1);
 }
 
 void	builtin_export(int argc, char **argv)
@@ -77,8 +78,13 @@ void	builtin_export(int argc, char **argv)
 	{
 		if (check_key_value(argv[idx]) == 1)
 		{
-			key = get_key(argv[idx]);
-			value = get_value(argv[idx]);
+			if (get_key(argv[idx], &key) == 0)
+				exit(1);
+			if (get_value(argv[idx]) == 0)
+			{
+				free(key);
+				exit(1);
+			}
 			if (add_env(key, value) == 0)
 				write(2, "error\n", 6);
 			if (*key != 0)
