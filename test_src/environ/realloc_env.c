@@ -1,44 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_arg.c                                        :+:      :+:    :+:   */
+/*   realloc_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/12 16:04:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 16:35:56 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/12 15:51:00 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/12 18:05:30 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include "ft_environ.h"
+#include "libft.h"
+#include <stdio.h>
 
-void			free_string_arr(char **arg)
+char	**realloc_env(char **env, int size)
 {
+	char	**result;
 	int		idx;
 	int		len;
+	int		str_len;
 
-
-	len = get_strarr_size(arg);
+	len = ((idx = get_strarr_size(env)) > size ? size : idx);
+	if ((result = (char **)malloc(sizeof(char *) * (size + 1))) == 0)
+		return (0);
 	idx = 0;
 	while (idx < len)
 	{
-		free(arg[idx]);
+		str_len = ft_strlen(env[idx]) + 1;
+		if ((result[idx] =
+					(char *)malloc(sizeof(char) * str_len)) == 0)
+			return (clean_env(result, idx));
+		ft_strlcpy(result[idx], env[idx], str_len);
 		idx++;
 	}
-	free(arg);
-}
-
-void			clean_arg(char *key, char *value, char **arg, char **env)
-{
-	if (key != 0)
-		free(key);
-	if (value != 0)
-		free(value);
-	if (arg != 0)
-		free_string_arr(arg);
-	if (env != 0)
-		free_string_arr(arg);
-	exit(1);
+	result[size] = 0;
+	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:36:16 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 15:40:57 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/12 18:03:10 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include "libft.h"
 
-extern	char **environ;
+extern	char **g_env;
 
 int		get_strarr_size(char **arr)
 {
@@ -47,7 +47,7 @@ char	**cpy_env(char **environ, int len)
 	int		idx;
 	int		size;
 
-	if ((result = (char **)malloc(sizeof(char *) * len)) == 0)
+	if ((result = (char **)malloc(sizeof(char *) * (len + 1))) == 0)
 		return (0);
 	idx = 0;
 	while (idx < len)
