@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:36:16 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 15:34:05 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/12 15:40:57 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft.h"
-#include "test.h"
 
 extern	char **environ;
 
@@ -62,11 +61,4 @@ char	**cpy_env(char **environ, int len)
 	}
 	result[idx] = 0;
 	return (result);
-}
-
-int		main(int argc, char **argv)
-{
-	argc--;
-	argv++;
-	builtin_export(argc, argv);
 }
