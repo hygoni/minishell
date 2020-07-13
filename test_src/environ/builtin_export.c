@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 21:51:03 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/13 23:46:55 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "ft_environ.h"
 #include "libft.h"
 
-int		add_env(char ***env, char *key, char *value)
+int			add_env(char ***env, char *key, char *value)
 {
 	char	*result;
 	char	*sub;
@@ -43,7 +43,7 @@ int		add_env(char ***env, char *key, char *value)
 	return (1);
 }
 
-int		check_key_value(char *str)
+int			check_key_value(char *str)
 {
 	int		idx;
 
@@ -56,7 +56,7 @@ int		check_key_value(char *str)
 		return (1);
 }
 
-int		set_key(char *str, char **key)
+int			set_key(char *str, char **key)
 {
 	int		end;
 
@@ -66,7 +66,7 @@ int		set_key(char *str, char **key)
 	return (1);
 }
 
-int		set_value(char *str, char **value)
+int			set_value(char *str, char **value)
 {
 	int		start;
 	int		len;
@@ -79,7 +79,7 @@ int		set_value(char *str, char **value)
 	return (1);
 }
 
-void	 builtin_export(int argc, char **argv, char ***env)
+void		builtin_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;
@@ -91,6 +91,8 @@ void	 builtin_export(int argc, char **argv, char ***env)
 		if (check_key_value(argv[idx]) == 1)
 		{
 			if (set_key(argv[idx], &key) == 0)
+				clean_arg(0, 0, argv, *env);
+			if (check_validate(key) == 0)
 				clean_arg(0, 0, argv, *env);
 			if (set_value(argv[idx], &value) == 0)
 				clean_arg(key, 0, argv, *env);

@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:36:26 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 15:48:35 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/13 23:50:19 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ int		get_equal_idx(char *str)
 /*
 ** description:	get value in environ variable
 ** param:
-				char **env: environ variable
-				char *key:	key
+** 	char **env:	environ variable
+** 	char *key:	key
 ** return:		value
 */
+
 char	*get_env_value(char **env, char *key)
 {
 	char	*result;

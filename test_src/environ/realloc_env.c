@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:51:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 18:05:30 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/13 23:51:17 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	**realloc_env(char **env, int size)
 	int		len;
 	int		str_len;
 
-	len = ((idx = get_strarr_size(env)) > size ? size : idx);
+	idx = get_strarr_size(env);
+	len = (idx > size ? size : idx);
 	if ((result = (char **)malloc(sizeof(char *) * (size + 1))) == 0)
 		return (0);
 	idx = 0;

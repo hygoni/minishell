@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 16:04:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 16:35:56 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/13 23:47:42 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void			free_string_arr(char **arg)
 {
 	int		idx;
 	int		len;
-
 
 	len = get_strarr_size(arg);
 	idx = 0;
