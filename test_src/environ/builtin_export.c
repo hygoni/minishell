@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/12 18:07:25 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/13 21:51:03 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "ft_environ.h"
 #include "libft.h"
 
-int		add_env(char *key, char *value, char ***env)
+int		add_env(char ***env, char *key, char *value)
 {
 	char	*result;
 	char	*sub;
@@ -79,7 +79,7 @@ int		set_value(char *str, char **value)
 	return (1);
 }
 
-void builtin_export(int argc, char **argv, char ***env)
+void	 builtin_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;
@@ -94,7 +94,7 @@ void builtin_export(int argc, char **argv, char ***env)
 				clean_arg(0, 0, argv, *env);
 			if (set_value(argv[idx], &value) == 0)
 				clean_arg(key, 0, argv, *env);
-			if (add_env(key, value, env) == 0)
+			if (check_key(env, key, value) == 0)
 				clean_arg(key, value, argv, *env);
 			if (*key != 0)
 				free(key);
