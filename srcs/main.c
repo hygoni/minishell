@@ -60,23 +60,24 @@ int		execute_command(char **argv, char ***env)
 	char	*command;
 	int		len;
 	int		size;
-
+	
+	//a b c d
 	command = argv[0];
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
-	if (ft_strncmp(command, "echo", len > 4 ? len : 4) == 0)
+	if (ft_strcmp(command, "echo") == 0)
 		echo(size, argv);
-	else if (ft_strncmp(command, "cd", len > 2 ? len : 2) == 0)
+	else if (ft_strcmp(command, "cd") == 0)
 		cd(size, argv, *env);
-	else if (ft_strncmp(command, "pwd", len > 3 ? len : 3) == 0)
+	else if (ft_strcmp(command, "pwd") == 0)
 		pwd(size, argv, *env);
-	else if (ft_strncmp(command, "env", len > 3 ? len : 3) == 0)
+	else if (ft_strcmp(command, "env") == 0)
 		_env(*env);
-	else if (ft_strncmp(command, "export", len > 6 ? len : 6) == 0)
+	else if (ft_strcmp(command, "export") == 0)
 		_export(size, argv, env);
-	else if (ft_strncmp(command, "unset", len > 5 ? len : 5) == 0)
+	else if (ft_strcmp(command, "unset") == 0)
 		_unset(size, argv, env);
-	else if (ft_strncmp(command, "exit", len > 4 ? len : 4) == 0)
+	else if (ft_strcmp(command, "exit") == 0)
 	{
 		if (argv[1] != 0)
 			_exit(ft_atoi(argv[1]));
