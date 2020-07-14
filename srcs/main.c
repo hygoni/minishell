@@ -6,6 +6,7 @@
 #include "libft.h"
 #include "get_next_line.h"
 #include "ft_environ.h"
+#include "builtin.h"
 
 extern char **environ;
 
@@ -64,19 +65,24 @@ int		execute_command(char **argv, char ***env)
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
 	if (ft_strncmp(command, "echo", len > 4 ? len : 4) == 0)
-		printf("echo command\n");
+		echo(size, argv);
 	else if (ft_strncmp(command, "cd", len > 2 ? len : 2) == 0)
-		printf("cd command\n");
+		cd(size, argv, *env);
 	else if (ft_strncmp(command, "pwd", len > 3 ? len : 3) == 0)
-		printf("cd command\n");
+		pwd(size, argv, *env);
 	else if (ft_strncmp(command, "env", len > 3 ? len : 3) == 0)
-		builtin_env(*env);
+		_env(*env);
 	else if (ft_strncmp(command, "export", len > 6 ? len : 6) == 0)
-		builtin_export(size, argv, env);
+		_export(size, argv, env);
 	else if (ft_strncmp(command, "unset", len > 5 ? len : 5) == 0)
-		builtin_unset(size, argv, env);
+		_unset(size, argv, env);
 	else if (ft_strncmp(command, "exit", len > 4 ? len : 4) == 0)
-		return (0);
+	{
+		if (argv[1] != 0)
+			_exit(ft_atoi(argv[1]));
+		else
+			_exit(0);
+	}
 	else
 		execute_binary(argv, *env);
 	return (1);

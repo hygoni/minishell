@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 20:08:08 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 20:35:42 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void		env_arr_move(char **env, int idx, int len)
 	}
 }
 
-void		builtin_unset(int argc, char **argv, char ***env)
+void		_unset(int argc, char **argv, char ***env)
 {
 	int		idx;
 	int		remove_idx;

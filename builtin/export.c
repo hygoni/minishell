@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 23:46:55 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 20:35:32 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int			set_value(char *str, char **value)
 	return (1);
 }
 
-void		builtin_export(int argc, char **argv, char ***env)
+void		_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;

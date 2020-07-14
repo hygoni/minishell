@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/13 23:52:30 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 20:35:37 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/14 20:38:13 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/14 20:40:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include "libft.h"
+#ifndef BUILTIN_H
+# define BUILTIN_H
 
-void		_env(char **env)
-{
-	int		idx;
+int		cd(int argc, char **argv, char **environ);
+void	echo(int argc, char **argv);
+void	_exit(int status);
+int		pwd(int argc, char **argv, char **environ);
 
-	idx = 0;
-	while (env[idx] != 0)
-	{
-		ft_putendl_fd(env[idx], 1);
-		idx++;
-	}
-}
+#endif
