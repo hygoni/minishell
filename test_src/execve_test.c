@@ -54,7 +54,7 @@ void	execute_binary(char **argv, char **env)
 	}
 }
 
-void	execute_command(char **argv, char ***env)
+int		execute_command(char **argv, char ***env)
 {
 	char	*command;
 	int		len;
@@ -76,9 +76,10 @@ void	execute_command(char **argv, char ***env)
 	else if (ft_strncmp(command, "unset", len > 5 ? len : 5) == 0)
 		builtin_unset(size, argv, env);
 	else if (ft_strncmp(command, "exit", len > 4 ? len : 4) == 0)
-		printf("exit command\n");
+		return (0);
 	else
 		execute_binary(argv, *env);
+	return (1);
 }
 
 int		main(void)
@@ -99,6 +100,12 @@ int		main(void)
 		new_argv = ft_split(command, ' ');
 		free(command);
 		command = 0;
-		execute_command(new_argv, &env);
+		if (execute_command(new_argv, &env) == 0)
+		{
+			clean_arg(prompt, 0, new_argv, env);
+			break ;
+		}
+		clean_arg(0, 0, new_argv, 0);
 	}
+	printf("program end\n");
 }

@@ -6,12 +6,13 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 16:04:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 23:47:42 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 20:01:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "ft_environ.h"
 
 void			free_string_arr(char **arg)
@@ -38,6 +39,5 @@ void			clean_arg(char *key, char *value, char **arg, char **env)
 	if (arg != 0)
 		free_string_arr(arg);
 	if (env != 0)
-		free_string_arr(arg);
-	exit(1);
+		free_string_arr(env);
 }
