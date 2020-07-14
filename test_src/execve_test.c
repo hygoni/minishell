@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include "libft.h"
 #include "get_next_line.h"
 
 extern char **environ;
@@ -72,7 +73,6 @@ int		main(void)
 	pid_t	pid;
 	int		state;
 
-	new_argv = (char **)malloc(sizeof(char *) * 2);
 	prompt = make_prompt(environ);
 	child = 1;
 	while (1)
@@ -90,8 +90,9 @@ int		main(void)
 			write(1, prompt, ft_strlen(prompt));
 			write(1, "% ", 2);
 			get_next_line(1, &command);
-			new_argv[0] = command;
-			new_argv[1] = 0;
+			new_argv = ft_split(command, ' ');
+			free(command);
+			command = new_argv[0];
 			child = fork();
 			pid = wait(&state);
 		}
