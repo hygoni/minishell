@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 23:51:35 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:31:17 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 #include <unistd.h>
 #include "libft.h"
 #include "ft_environ.h"
+#include <stdio.h>
 
 int			check_validate(char *str)
 {
 	int		idx;
 
 	idx = 0;
+	if ((str[0] != 0) && (ft_isdigit((int)str[0]) == 1))
+		return (0);
 	while (str[idx] != 0)
 	{
 		if ((ft_isalnum((int)str[idx]) == 0) && (str[idx] != '_'))
