@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:26:13 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 20:26:12 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 21:54:31 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,16 @@
 #define GETCWD_FAILED				"getcwd() failed"
 #define ENV_ERROR					"environment variables error"
 
-void	update_pwd(char *pwd, char **environ)
+int		update_pwd(char *pwd, char **environ)
 {
 	char	*oldpwd;
 
 	oldpwd = get_env_value(environ, PWD);
 	if (oldpwd == NULL)
-		oldpwd = pwd;
+		return (error_msg(EXE_NAME, ENV_ERROR));
+	_export_one(OLDPWD, OLDPWD, environ);
+	_export_one(PWD, pwd, environ);
+	return (-1);
 }
 
 int		get_previous(char *buf, char **environ)
@@ -46,7 +49,7 @@ int		get_previous(char *buf, char **environ)
 	if (oldpwd == NULL)
 		return (error_msg(EXE_NAME, ENV_ERROR));
 	ft_strlcpy(buf, oldpwd, PATH_MAX);
-	return (TRUE);
+	return (-1);
 }
 
 int		cd(int argc, char **argv, char **environ)
@@ -62,7 +65,7 @@ int		cd(int argc, char **argv, char **environ)
 		return (error_msg(EXE_NAME, GETCWD_FAILED));
 	else if (ft_strcmp(argv[1], "-") == 0)
 	{
-		if ((ret = get_previous(buf, environ)) == FALSE)
+		if ((ret = get_previous(buf, environ)) >= 0)
 			return (ret);
 	}
 	else
@@ -73,6 +76,7 @@ int		cd(int argc, char **argv, char **environ)
 	}
 	if (chdir(buf) == -1)
 		return (error_msg_param(EXE_NAME, strerror(errno), argv[1]));
-	printf("cwd : %s\n", buf);
+	if ((ret = update_pwd(buf, environ)) >= 0)
+		return (ret);
 	return (EXIT_SUCCESS);
 }

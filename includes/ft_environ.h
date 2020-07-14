@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:30:41 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 20:36:00 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 21:52:38 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ void	_export(int argc, char **argv, char ***env);
 void	_unset(int argc, char **argv, char ***env);
 void	_env(char **env);
 int		check_validate(char *str);
+void	_export_one(char *key, char *value, char **env);
 
 #endif
