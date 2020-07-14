@@ -1,43 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_arg.c                                        :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/12 16:04:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 23:47:42 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/13 23:52:30 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/14 20:35:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <stdlib.h>
-#include "ft_environ.h"
+#include "libft.h"
 
-void			free_string_arr(char **arg)
+void		_env(char **env)
 {
 	int		idx;
-	int		len;
 
-	len = get_strarr_size(arg);
 	idx = 0;
-	while (idx < len)
+	while (env[idx] != 0)
 	{
-		free(arg[idx]);
+		ft_putendl_fd(env[idx], 1);
 		idx++;
 	}
-	free(arg);
-}
-
-void			clean_arg(char *key, char *value, char **arg, char **env)
-{
-	if (key != 0)
-		free(key);
-	if (value != 0)
-		free(value);
-	if (arg != 0)
-		free_string_arr(arg);
-	if (env != 0)
-		free_string_arr(arg);
-	exit(1);
 }

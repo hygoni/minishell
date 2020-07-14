@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 11:31:17 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/14 20:35:42 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ int			check_validate(char *str)
 
 	idx = 0;
 	if ((str[0] != 0) && (ft_isdigit((int)str[0]) == 1))
+	{
+		ft_putendl_fd("not valid key", 2);
 		return (0);
+	}
 	while (str[idx] != 0)
 	{
 		if ((ft_isalnum((int)str[idx]) == 0) && (str[idx] != '_'))
@@ -55,7 +58,7 @@ void		env_arr_move(char **env, int idx, int len)
 	}
 }
 
-void		builtin_unset(int argc, char **argv, char ***env)
+void		_unset(int argc, char **argv, char ***env)
 {
 	int		idx;
 	int		remove_idx;

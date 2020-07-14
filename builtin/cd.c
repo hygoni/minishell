@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:26:13 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 16:03:10 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/14 20:26:12 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int		cd(int argc, char **argv, char **environ)
 	char	buf[PATH_MAX];
 	int		ret;
 	char	*slash;
-	char	*tmp;
 
 	ft_memset(buf, 0, PATH_MAX);
 	if (argc > 2)
@@ -76,9 +75,4 @@ int		cd(int argc, char **argv, char **environ)
 		return (error_msg_param(EXE_NAME, strerror(errno), argv[1]));
 	printf("cwd : %s\n", buf);
 	return (EXIT_SUCCESS);
-}
-
-int		main(int argc, char **argv, char **environ)
-{
-	return (cd(argc, argv, environ));
 }

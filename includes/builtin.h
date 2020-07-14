@@ -1,18 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/12 16:15:30 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 20:26:51 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/14 20:38:13 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/14 20:40:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#ifndef BUILTIN_H
+# define BUILTIN_H
 
-void	_exit(int status)
-{
-	exit(status);
-}
+int		cd(int argc, char **argv, char **environ);
+void	echo(int argc, char **argv);
+void	_exit(int status);
+int		pwd(int argc, char **argv, char **environ);
+
+#endif
