@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 19:44:04 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:01:41 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,6 @@ int		check_env_key(char *str, char *key)
 		key++;
 	}
 	return (1);
-}
-
-char	*make_prompt(char **env)
-{
-	char	*result;
-	char	*sub;
-
-	result = 0;
-	sub = get_env_value(env, "USER");
-	result = ft_strjoin(sub, "% ");
-	return (result);
 }
 
 void	execute_binary(char **argv, char **env)
@@ -94,7 +83,7 @@ int		execute_command(char **argv, char ***env)
 	else if (ft_strcmp(command, "cd") == 0)
 		cd(size, argv, *env);
 	else if (ft_strcmp(command, "pwd") == 0)
-		pwd(size, argv, *env);
+		pwd(size, *env);
 	else if (ft_strcmp(command, "env") == 0)
 		_env(*env);
 	else if (ft_strcmp(command, "export") == 0)
@@ -119,16 +108,9 @@ int		main(void)
 	char	**new_argv;
 	char	**env;
 	char	*prompt;
-	int		len;
 
-	prompt = make_prompt(environ);
-	len = get_strarr_size(environ);
-	if ((env = cpy_env(environ, len)) == 0)
-	{
-		if (prompt != 0)
-			free(prompt);
+	if (init_main(&prompt, environ, &env) == 0)
 		return (0);
-	}
 	while (1)
 	{
 		write(1, prompt, ft_strlen(prompt));

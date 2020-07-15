@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 18:47:49 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 19:30:11 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:15:31 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,7 @@ char	*find_exec(char *name, char **environ)
 		token = ft_strtok(NULL, ":");
 	}
 	free(path);
+	if ((ret = find_exec_sub("", name)) != NULL)
+		return (ret);
 	return (NULL);
 }

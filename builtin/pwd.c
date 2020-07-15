@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:45:34 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 19:34:39 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:00:25 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,9 @@
 #define PWD						"PWD"
 #define ENV_ERROR				"environment variables error"
 
-int		pwd(int argc, char **argv, char **environ)
+int		pwd(int argc, char **environ)
 {
-	int		i;
-	int		is_physical;
 	char	*logical;
-	char	buf[PATH_MAX + 1];
 
 	if (argc != 1)
 		return (error_msg(EXE_NAME, TOO_MANY_ARGUMENTS));
