@@ -8,6 +8,10 @@
 #include "ft_environ.h"
 #include "builtin.h"
 #include "error.h"
+#include "minishell.h"
+
+#define EXE_NAME	"minishell"
+#define COMMAND_NOT_FOUND	"command not found"
 
 extern char **environ;
 
@@ -39,8 +43,14 @@ void	execute_binary(char **argv, char **env)
 	pid_t	child;
 	pid_t	pid;
 	int		state;
-	int		error;
+	char	*exe_path;
 
+	if ((exe_path = find_exec(argv[0], env)) == NULL)
+	{
+		error_msg_param(EXE_NAME, COMMAND_NOT_FOUND, argv[0]);
+		free(exe_path);
+		return ;
+	}
 	child = 1;
 	if (child != 0)
 	{
@@ -49,12 +59,12 @@ void	execute_binary(char **argv, char **env)
 	}
 	if (child == 0)
 	{
-		if (execve(argv[0], argv, env) == -1)
+		if (execve(exe_path, argv, env) == -1)
 		{
-			error = errno;
-			error_msg(argv[0], strerror(error));
-			_exit(error);
+			error_msg(EXE_NAME, strerror(errno));
+			_exit(errno);
 		}
+		free(exe_path);
 	}
 }
 
@@ -64,7 +74,6 @@ int		execute_command(char **argv, char ***env)
 	int		len;
 	int		size;
 	
-	//a b c d
 	command = argv[0];
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
@@ -111,7 +120,7 @@ int		main(void)
 	while (1)
 	{
 		write(1, prompt, ft_strlen(prompt));
-		get_next_line(1, &command);
+		get_next_line(0, &command);
 		new_argv = ft_split(command, ' ');
 		free(command);
 		command = 0;
