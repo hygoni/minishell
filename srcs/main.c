@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:01:41 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:52:16 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_binary(char **argv, char **env)
 		if (execve(exe_path, argv, env) == -1)
 		{
 			error_msg(EXE_NAME, strerror(errno));
-			_exit(errno);
+			ft_exit(errno);
 		}
 		free(exe_path);
 	}
@@ -85,17 +85,17 @@ int		execute_command(char **argv, char ***env)
 	else if (ft_strcmp(command, "pwd") == 0)
 		pwd(size, *env);
 	else if (ft_strcmp(command, "env") == 0)
-		_env(*env);
+		ft_env(*env);
 	else if (ft_strcmp(command, "export") == 0)
-		_export(size, argv, env);
+		ft_export(size, argv, env);
 	else if (ft_strcmp(command, "unset") == 0)
-		_unset(size, argv, env);
+		ft_unset(size, argv, env);
 	else if (ft_strcmp(command, "exit") == 0)
 	{
 		if (argv[1] != 0)
-			_exit(ft_atoi(argv[1]));
+			ft_exit(ft_atoi(argv[1]));
 		else
-			_exit(0);
+			ft_exit(0);
 	}
 	else
 		execute_binary(argv, *env);

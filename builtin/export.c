@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 20:28:56 by marvin           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:54:39 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int			set_value(char *str, char **value)
 	return (1);
 }
 
-void		_export(int argc, char **argv, char ***env)
+void		ft_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;
@@ -89,7 +89,7 @@ void		_export(int argc, char **argv, char ***env)
 
 	idx = 0;
 	if (argc == 1)
-		return (_env(*env));
+		return (ft_env(*env));
 	while (idx < argc)
 	{
 		key = 0;
@@ -108,7 +108,7 @@ void		_export(int argc, char **argv, char ***env)
 	}
 }
 
-void		_export_one(char *key, char *value, char **env)
+void		ft_export_one(char *key, char *value, char **env)
 {
 	int		size;
 	char	*buf;
@@ -124,7 +124,7 @@ void		_export_one(char *key, char *value, char **env)
 	ft_strlcat(buf, "=", size);
 	ft_strlcat(buf, value, size);
 	argv[1] = buf;
-	_export(2, argv, &env);
+	ft_export(2, argv, &env);
 	free(buf);
 	free(argv);
 }

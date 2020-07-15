@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:30:41 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 19:33:56 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:51:44 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	clean_arg(char **key, char **value, char ***arg, char ***env);
 char	**realloc_env(char **env, int size);
 int		check_key(char ***env, char *key, char *value);
 int		add_env(char ***env, char *key, char *vaule);
-void	_export(int argc, char **argv, char ***env);
-void	_unset(int argc, char **argv, char ***env);
-void	_env(char **env);
+void	ft_export(int argc, char **argv, char ***env);
+void	ft_unset(int argc, char **argv, char ***env);
+void	ft_env(char **env);
 int		check_validate(char *str);
-void	_export_one(char *key, char *value, char **env);
+void	ft_export_one(char *key, char *value, char **env);
 
 #endif

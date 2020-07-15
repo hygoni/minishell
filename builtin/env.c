@@ -6,14 +6,14 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 23:52:30 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 20:35:37 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:51:18 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include "libft.h"
 
-void		_env(char **env)
+void		ft_env(char **env)
 {
 	int		idx;
 

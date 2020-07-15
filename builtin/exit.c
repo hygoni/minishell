@@ -6,13 +6,13 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 16:15:30 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 21:41:03 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:55:44 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-void	_exit(int status)
+void	ft_exit(int status)
 {
 	exit(status);
 }
