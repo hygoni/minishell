@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 20:12:19 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:28:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int			add_env(char ***env, char *key, char *value)
 		clean_env(new_env, len);
 		return (0);
 	}
+	free(sub);
 	new_env[len] = result;
 	*env = clean_env(*env, len);
 	*env = new_env;
