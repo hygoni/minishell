@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 19:37:31 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 19:44:04 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,9 +138,9 @@ int		main(void)
 		command = 0;
 		if (*new_argv != 0 && execute_command(new_argv, &env) == 0)
 		{
-			clean_arg(prompt, 0, new_argv, env);
+			clean_arg(&prompt, 0, &new_argv, &env);
 			break ;
 		}
-		clean_arg(0, 0, new_argv, 0);
+		clean_arg(0, 0, &new_argv, 0);
 	}
 }
