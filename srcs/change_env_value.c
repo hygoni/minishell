@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 18:31:21 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/13 21:52:09 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 15:29:53 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,17 @@ int		check_key(char ***env, char *key, char *value)
 	char	**env_ptr;
 
 	env_ptr = *env;
-	while (*env_ptr != 0)
+	if (key != 0 && *key != 0 && value != 0)
 	{
-		equal = get_equal_idx(*env_ptr);
-		if (ft_strncmp(*env_ptr, key, equal) == 0)
-			return (change_env_value(key, value, env_ptr));
-		env_ptr++;
+		printf("key: %s value: %s\n", key, value);
+		while (*env_ptr != 0)
+		{
+			equal = get_equal_idx(*env_ptr);
+			if (ft_strncmp(*env_ptr, key, equal) == 0)
+				return (change_env_value(key, value, env_ptr));
+			env_ptr++;
+		}
+		return (add_env(env, key, value));
 	}
-	return (add_env(env, key, value));
+	return (0);
 }

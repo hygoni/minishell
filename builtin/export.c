@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 21:53:21 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 15:27:10 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include "ft_environ.h"
 #include "libft.h"
+#include "error.h"
 
 int			add_env(char ***env, char *key, char *value)
 {
@@ -88,21 +89,21 @@ void		_export(int argc, char **argv, char ***env)
 	idx = 0;
 	while (idx < argc)
 	{
+		key = 0;
+		value = 0;
 		if (check_key_value(argv[idx]) == 1)
 		{
-			if (set_key(argv[idx], &key) == 0)
-				clean_arg(0, 0, argv, *env);
+			set_key(argv[idx], &key);
+			set_value(argv[idx], &value);
 			if (check_validate(key) == 0)
-				clean_arg(0, 0, argv, *env);
-			if (set_value(argv[idx], &value) == 0)
-				clean_arg(key, 0, argv, *env);
-			if (check_key(env, key, value) == 0)
-				clean_arg(key, value, argv, *env);
-			if (*key != 0)
-				free(key);
-			if (*value != 0)
-				free(value);
+				error_msg_param(argv[0], "not valid in this context", key);
+			else if (check_key(env, key, value) == 0)
+				error_msg(argv[0], "error");
 		}
+		if (key != 0 && *key != 0)
+			free(key);
+		if (value != 0 && *value != 0)
+			free(value);
 		idx++;
 	}
 }

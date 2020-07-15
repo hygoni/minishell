@@ -7,6 +7,7 @@
 #include "get_next_line.h"
 #include "ft_environ.h"
 #include "builtin.h"
+#include "error.h"
 
 extern char **environ;
 
@@ -38,20 +39,22 @@ void	execute_binary(char **argv, char **env)
 	pid_t	child;
 	pid_t	pid;
 	int		state;
+	int		error;
 
 	child = 1;
-	if (child == 0)
-	{
-		if (execve(argv[0], argv, env) == -1)
-		{
-			fprintf(stderr, "error: %s\n", strerror(errno));
-			return ;
-		}
-	}
 	if (child != 0)
 	{
 		child = fork();
 		pid = wait(&state);
+	}
+	if (child == 0)
+	{
+		if (execve(argv[0], argv, env) == -1)
+		{
+			error = errno;
+			error_msg(argv[0], strerror(error));
+			_exit(error);
+		}
 	}
 }
 
@@ -114,5 +117,4 @@ int		main(void)
 		}
 		clean_arg(0, 0, new_argv, 0);
 	}
-	printf("program end\n");
 }

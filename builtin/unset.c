@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/14 20:35:42 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 16:58:02 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,8 @@ int			check_validate(char *str)
 	int		idx;
 
 	idx = 0;
-	if ((str[0] != 0) && (ft_isdigit((int)str[0]) == 1))
-	{
-		ft_putendl_fd("not valid key", 2);
+	if (str != 0 && (str[0] != 0) && (ft_isdigit((int)str[0]) == 1))
 		return (0);
-	}
 	while (str[idx] != 0)
 	{
 		if ((ft_isalnum((int)str[idx]) == 0) && (str[idx] != '_'))
@@ -75,12 +72,13 @@ void		_unset(int argc, char **argv, char ***env)
 			{
 				free((*env)[remove_idx]);
 				env_arr_move(*env, remove_idx, arr_size);
-				if ((new_env = realloc_env(*env, arr_size - 1)) == 0)
-					clean_arg(0, 0, argv, *env);
+				new_env = realloc_env(*env, arr_size - 1);
 				*env = clean_env(*env, arr_size);
 				*env = new_env;
 			}
 		}
+		else
+			error_msg_param(argv[0], "not a valid identifier", argv[idx]);
 		idx++;
 	}
 }
