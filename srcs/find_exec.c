@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 18:47:49 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:15:31 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 20:38:33 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,16 @@
 #define ENV_ERROR	"environment variables error"
 #define EXE_NAME	"minishell"
 
-char	*find_exec_sub(char *pathname, char *name)
+char	*find_exec_sub(char *path, char *name)
 {
 	char		buf[PATH_MAX];
 	char		*slash;
 	struct stat	statbuf;
 
 	ft_memset(buf, 0, PATH_MAX);
-	ft_strlcat(buf, pathname, PATH_MAX);
-	slash = (pathname[ft_strlen(pathname) - 1] != '/') ? "/" : "";
+	ft_strlcat(buf, path, PATH_MAX);
+	slash = (path[ft_strlen(path) - 1] != '/') ? "/" : "";
+	slash = (ft_strlen(path) == 0) ? "" : slash;
 	ft_strlcat(buf, slash, PATH_MAX);
 	ft_strlcat(buf, name, PATH_MAX);
 	if (stat(buf, &statbuf) == 0)
