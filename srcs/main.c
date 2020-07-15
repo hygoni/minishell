@@ -102,7 +102,12 @@ int		main(void)
 
 	prompt = make_prompt(environ);
 	len = get_strarr_size(environ);
-	env = cpy_env(environ, len);
+	if ((env = cpy_env(environ, len)) == 0)
+	{
+		if (prompt != 0)
+			free(prompt);
+		return (0);
+	}
 	while (1)
 	{
 		write(1, prompt, ft_strlen(prompt));
