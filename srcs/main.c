@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:59:06 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 21:16:15 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	execute_binary(char **argv, char **env)
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
 	{
 		error_msg_param(EXE_NAME, COMMAND_NOT_FOUND, argv[0]);
-		free(exe_path);
 		return ;
 	}
 	child = 1;
@@ -57,6 +56,7 @@ void	execute_binary(char **argv, char **env)
 	{
 		child = fork();
 		pid = wait(&state);
+		free(exe_path);
 	}
 	if (child == 0)
 	{
@@ -65,7 +65,6 @@ void	execute_binary(char **argv, char **env)
 			error_msg(EXE_NAME, strerror(errno));
 			ft_exit(ft_itoa(errno));
 		}
-		free(exe_path);
 	}
 }
 
@@ -74,7 +73,7 @@ int		execute_command(char **argv, char ***env)
 	char	*command;
 	int		len;
 	int		size;
-	
+
 	command = argv[0];
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
