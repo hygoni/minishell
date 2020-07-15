@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:26:13 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 21:54:31 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 18:42:56 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		update_pwd(char *pwd, char **environ)
 	oldpwd = get_env_value(environ, PWD);
 	if (oldpwd == NULL)
 		return (error_msg(EXE_NAME, ENV_ERROR));
-	_export_one(OLDPWD, OLDPWD, environ);
+	_export_one(OLDPWD, oldpwd, environ);
 	_export_one(PWD, pwd, environ);
 	return (-1);
 }
@@ -74,7 +74,7 @@ int		cd(int argc, char **argv, char **environ)
 		ft_strlcat(buf, slash, PATH_MAX);
 		ft_strlcat(buf, argv[1], PATH_MAX);
 	}
-	if (chdir(buf) == -1)
+	if (chdir(buf) == -1 || getcwd(buf, PATH_MAX) == NULL)
 		return (error_msg_param(EXE_NAME, strerror(errno), argv[1]));
 	if ((ret = update_pwd(buf, environ)) >= 0)
 		return (ret);
