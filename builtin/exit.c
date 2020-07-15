@@ -6,13 +6,20 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 16:15:30 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:55:44 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:59:43 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 
-void	ft_exit(int status)
+void	ft_exit(char *status)
 {
-	exit(status);
+	int		val;
+
+	if (status != 0)
+		val = ft_atoi(status);
+	else
+		val = 0;
+	exit(val);
 }

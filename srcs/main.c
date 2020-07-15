@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:52:16 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:59:06 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_binary(char **argv, char **env)
 		if (execve(exe_path, argv, env) == -1)
 		{
 			error_msg(EXE_NAME, strerror(errno));
-			ft_exit(errno);
+			ft_exit(ft_itoa(errno));
 		}
 		free(exe_path);
 	}
@@ -91,12 +91,7 @@ int		execute_command(char **argv, char ***env)
 	else if (ft_strcmp(command, "unset") == 0)
 		ft_unset(size, argv, env);
 	else if (ft_strcmp(command, "exit") == 0)
-	{
-		if (argv[1] != 0)
-			ft_exit(ft_atoi(argv[1]));
-		else
-			ft_exit(0);
-	}
+		ft_exit(argv[1]);
 	else
 		execute_binary(argv, *env);
 	return (1);
