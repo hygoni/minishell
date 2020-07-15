@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 16:58:02 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 19:18:13 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include "libft.h"
 #include "ft_environ.h"
+#include "error.h"
 #include <stdio.h>
 
 int			check_validate(char *str)

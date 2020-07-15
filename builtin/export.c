@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 15:27:10 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 19:34:38 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void		_export(int argc, char **argv, char ***env)
 	char	*value;
 
 	idx = 0;
+	if (argc == 1)
+		return (_env(*env));
 	while (idx < argc)
 	{
 		key = 0;
@@ -100,10 +102,7 @@ void		_export(int argc, char **argv, char ***env)
 			else if (check_key(env, key, value) == 0)
 				error_msg(argv[0], "error");
 		}
-		if (key != 0 && *key != 0)
-			free(key);
-		if (value != 0 && *value != 0)
-			free(value);
+		clean_arg(&key, &value, 0, 0);
 		idx++;
 	}
 }

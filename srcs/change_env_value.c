@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 18:31:21 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 15:29:53 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 19:42:09 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int		check_key(char ***env, char *key, char *value)
 	env_ptr = *env;
 	if (key != 0 && *key != 0 && value != 0)
 	{
-		printf("key: %s value: %s\n", key, value);
 		while (*env_ptr != 0)
 		{
 			equal = get_equal_idx(*env_ptr);
