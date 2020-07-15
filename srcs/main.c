@@ -110,7 +110,7 @@ int		main(void)
 		new_argv = ft_split(command, ' ');
 		free(command);
 		command = 0;
-		if (execute_command(new_argv, &env) == 0)
+		if (*new_argv != 0 && execute_command(new_argv, &env) == 0)
 		{
 			clean_arg(prompt, 0, new_argv, env);
 			break ;
