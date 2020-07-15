@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 19:34:38 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:12:19 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,16 +113,17 @@ void		_export_one(char *key, char *value, char **env)
 	char	*buf;
 	char	**argv;
 
-	argv = (char**)malloc(sizeof(char*) * 2);
-	argv[1] = NULL;
+	argv = (char**)malloc(sizeof(char*) * 3);
+	argv[0] = "export";
+	argv[2] = NULL;
 	size = ft_strlen(key) + ft_strlen("=") + ft_strlen(value) + 1;
 	buf = (char*)malloc(sizeof(char) * size);
 	ft_memset(buf, 0, size);
 	ft_strlcat(buf, key, size);
 	ft_strlcat(buf, "=", size);
 	ft_strlcat(buf, value, size);
-	argv[0] = buf;
-	_export(1, argv, &env);
+	argv[1] = buf;
+	_export(2, argv, &env);
 	free(buf);
 	free(argv);
 }
