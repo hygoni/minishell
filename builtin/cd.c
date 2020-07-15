@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:26:13 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 18:42:56 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/15 18:46:58 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int		cd(int argc, char **argv, char **environ)
 	char	*slash;
 
 	ft_memset(buf, 0, PATH_MAX);
-	if (argc > 2)
-		return (error_msg(EXE_NAME, TOO_MANY_ARGUMENTS));
+	if (argc != 2)
+		return ((argc == 1) ? 0 : error_msg(EXE_NAME, TOO_MANY_ARGUMENTS));
 	else if (getcwd(buf, PATH_MAX) == NULL)
 		return (error_msg(EXE_NAME, GETCWD_FAILED));
 	else if (ft_strcmp(argv[1], "-") == 0)
