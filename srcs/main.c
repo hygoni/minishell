@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 21:16:15 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/19 13:46:28 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,11 @@ int		main(void)
 	while (1)
 	{
 		write(1, prompt, ft_strlen(prompt));
-		get_next_line(0, &command);
+		if (get_next_line(0, &command) == 0 && *command == 0)
+		{
+			free(command);
+			break ;
+		}
 		new_argv = ft_split(command, ' ');
 		free(command);
 		command = 0;
@@ -119,4 +123,5 @@ int		main(void)
 		}
 		clean_arg(0, 0, &new_argv, 0);
 	}
+	clean_arg(0, 0, 0, &env);
 }
