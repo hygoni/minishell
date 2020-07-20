@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/19 16:48:19 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/20 14:21:27 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,31 @@
 #include "ft_environ.h"
 #include "libft.h"
 
-int		execute_pipe(int idx, char **argv, char ***env)
+int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 {
 	pid_t	child;
 	int		status;
+	char	**new_argv;
 
+	dup2(fd[1], 1);
+	dup2(fd[0], 0);
 	if (idx != 0)
 	{
 		child = fork();
 		if (child == 0)
-			execute_pipe(idx - 1, argv, env);
+			execute_pipe(idx - 1, fd, argv, env);
 		else
 			wait(&status);
-		printf("%s\n", argv[idx]);
-		printf("%d child exit\n", idx);
+		new_argv = ft_split(argv[idx], ' ');
+		execute_command(new_argv, env);
+		clean_arg(0, 0, &new_argv, 0);
 		exit(0);
 	}
 	else
 	{
-		printf("%s\n", argv[idx]);
-		printf("last child exit\n");
+		new_argv = ft_split(argv[idx], ' ');
+		execute_command(new_argv, env);
+		clean_arg(0, 0, &new_argv, 0);
 		exit(0);
 	}
 }
@@ -47,21 +52,30 @@ int		execute_commands(char **argv, char ***env)
 	int		status;
 	int		len;
 	char	**new_argv;
+	int		fd[2];
 
 	len = get_strarr_size(argv);
+	pipe(fd);
 	if (len > 1)
 	{
 		child = fork();
 		if (child == 0)
 		{
-			execute_pipe(len - 2, argv, env);
-			printf("first child exit\n");
+			execute_pipe(len - 2, fd, argv, env);
 			exit(0);
 		}
 		wait(&status);
 	}
+	//read fd0] and cpy stdin
 	new_argv = ft_split(argv[len - 1], ' ');
 	execute_command(new_argv, env);
 	clean_arg(0, 0, &new_argv, 0);
+	write(fd[0], "\0", 1);
+	char c;
+
+	while (read(fd[0], &c, 1) > 0)
+	{
+		write(1, &c, 1);
+	}
 	return (1);
 }
