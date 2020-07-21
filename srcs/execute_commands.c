@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/21 13:43:55 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/21 16:58:26 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 	int		status;
 	char	**new_argv;
 
-	//dup2(fd[1], 1);
-	//dup2(fd[0], 0);
 	if (idx != 0)
 	{
 		child = fork();
@@ -34,14 +32,15 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 			wait(&status);
 		new_argv = ft_split(argv[idx], ' ');
 		execute_command(new_argv, env);
+		close(fd[0]);
 		clean_arg(0, 0, &new_argv, 0);
 		exit(0);
 	}
 	else
 	{
+		close(fd[0]);
 		new_argv = ft_split(argv[idx], ' ');
 		execute_command(new_argv, env);
-		clean_arg(0, 0, &new_argv, 0);
 		exit(0);
 	}
 }
@@ -53,30 +52,32 @@ int		execute_commands(char **argv, char ***env)
 	int		len;
 	char	**new_argv;
 	int		fd[2];
+	int		origin_stdin;
 
 	len = get_strarr_size(argv);
-	pipe(fd);
+	origin_stdin = dup(0);
 	if (len > 1)
 	{
+		pipe(fd);
+		dup2(fd[0], 0);
 		child = fork();
 		if (child == 0)
 		{
 			dup2(fd[1], 1);
-			close(fd[0]);
-			fd[0] = dup(0);
 			execute_pipe(len - 2, fd, argv, env);
 			exit(0);
 		}
 		wait(&status);
+		close(fd[1]);
 	}
-	//read fd0] and cpy stdin
 	new_argv = ft_split(argv[len - 1], ' ');
 	execute_command(new_argv, env);
-	clean_arg(0, 0, &new_argv, 0);
-	char c;
-	while (read(fd[0], &c, 1) > 0)
+	if (len > 1)
 	{
-		write(1, &c, 1);
+		close(fd[0]);
+		dup2(origin_stdin, 0);
 	}
+	close(origin_stdin);
+	clean_arg(0, 0, &new_argv, 0);
 	return (1);
 }
