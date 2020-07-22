@@ -1,18 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_command.h                                  :+:      :+:    :+:   */
+/*   stdin_clear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/19 16:39:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/23 06:33:41 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/23 06:30:35 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/23 06:32:12 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTE_COMMAND_H
-# define EXECUTE_COMMAND_H
-int		execute_command(char **argv, char ***env);
-int		execute_commands(char **argv, char ***env);
-void	stdin_clear();
-#endif
+#include "libft.h"
+#include <unistd.h>
+
+void	stdin_clear()
+{
+	char	c;
+
+	while (read(0, &c, 1) > 0)
+	{
+		;
+	}
+}
