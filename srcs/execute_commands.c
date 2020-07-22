@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/21 16:58:26 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/23 08:05:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,30 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 	pid_t	child;
 	int		status;
 	char	**new_argv;
+	int		child_fd[2];
 
 	if (idx != 0)
 	{
+		pipe(child_fd);
+		dup2(child_fd[0], 0);
 		child = fork();
 		if (child == 0)
-			execute_pipe(idx - 1, fd, argv, env);
+			execute_pipe(idx - 1, child_fd, argv, env);
 		else
 			wait(&status);
 		new_argv = ft_split(argv[idx], ' ');
-		execute_command(new_argv, env);
+		close(child_fd[1]);
 		close(fd[0]);
+		dup2(fd[1], 1);
+		execute_command(new_argv, env);
 		clean_arg(0, 0, &new_argv, 0);
 		exit(0);
 	}
 	else
 	{
-		close(fd[0]);
 		new_argv = ft_split(argv[idx], ' ');
+		close(fd[0]);
+		dup2(fd[1], 1);
 		execute_command(new_argv, env);
 		exit(0);
 	}
@@ -63,7 +69,6 @@ int		execute_commands(char **argv, char ***env)
 		child = fork();
 		if (child == 0)
 		{
-			dup2(fd[1], 1);
 			execute_pipe(len - 2, fd, argv, env);
 			exit(0);
 		}
