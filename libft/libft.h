@@ -90,6 +90,7 @@ void			ft_putnbr_buf(int n, char *buf, size_t *i);
 void			ft_putstr(char *str);
 void			ft_putchar(char c);
 void			ft_putstr_endl(char *str);
+void			ft_putstr_endl_fd(char *str, int fd);
 
 
 size_t	ft_strspn(const char *s1, const char *s2);

@@ -12,31 +12,32 @@
 
 #include "libft.h"
 #include <stdlib.h>
+#define STDERR 2
 
 int		error_msg(char *name, char *msg)
 {
-	ft_putstr(name);
-	ft_putstr(": ");
-	ft_putstr_endl(msg);
+	ft_putstr_fd(name, STDERR);
+	ft_putstr_fd(": ", STDERR);
+	ft_putstr_endl_fd(msg, STDERR);
 	return (EXIT_FAILURE);
 }
 
 int		error_msg_param(char *name, char *msg, char *param)
 {
-	ft_putstr(name);
-	ft_putstr(": ");
-	ft_putstr(msg);
-	ft_putstr(": ");
-	ft_putstr_endl(param);
+	ft_putstr_fd(name, STDERR);
+	ft_putstr_fd(": ", STDERR);
+	ft_putstr_fd(msg, STDERR);
+	ft_putstr_fd(": ", STDERR);
+	ft_putstr_endl_fd(param, STDERR);
 	return (EXIT_FAILURE);
 }
 
 int		error_msg_parse(char *param)
 {
-	ft_putstr("minishell");
-	ft_putstr(": ");
-	ft_putstr("parse error near '");
-	ft_putstr(param);
-	ft_putstr_endl("'");
+	ft_putstr_fd("minishell", STDERR);
+	ft_putstr_fd(": ", STDERR);
+	ft_putstr_fd("parse error near '", STDERR);
+	ft_putstr_fd(param, STDERR);
+	ft_putstr_endl_fd("'", STDERR);
 	return (EXIT_FAILURE);
 }

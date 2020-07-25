@@ -66,7 +66,6 @@ char	*parse_path(char *arg)
 			token = ft_strdup("");
 			while (arg[i] != '$' && arg[i] != '\0')
 				token = ft_strjoinc(token, arg[i++]);
-			printf("key : %s\n", token);	
 		}
 		else
 		{
@@ -143,7 +142,7 @@ char	**ft_proc_quote_path(char *arg)
 	}
 	return (argv);
 }
-
+/*
 int		main(int argc, char **argv)
 {
 	char	**ret;
@@ -152,7 +151,7 @@ int		main(int argc, char **argv)
 	int i = 0;
 	while (ret[i] != NULL)
 	{
-		printf("%s\n", ret[i]);
 		i++;
 	}
 }
+*/
