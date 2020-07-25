@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/25 16:31:01 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 01:36:40 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ int		clear_redir(int *arr, int end, char **err_file, int error)
 	}
 	free(arr);
 	if (error != 0)
-		error_msg_param("minishell", *err_file, strerror(error));
+		return (error_msg_param("minishell", *err_file, strerror(error)));
 	if (err_file != 0 && *err_file == 0)
-		error_msg_parse("\\n");
+		return (error_msg_parse("\\n"));
 	else if (err_file != 0 && check_redir(*err_file) == 0)
-		error_msg_parse(*err_file);
+		return (error_msg_parse(*err_file));
 	return (0);
 }
 
@@ -178,5 +178,5 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 		}
 		idx++;
 	}
-	return (1);
+	return (0);
 }
