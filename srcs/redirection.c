@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 01:36:40 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 15:16:33 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,7 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 			if (check_redir(argv[++idx]) == 1)
 			{
 				(*fd_output)[output_idx] = open(argv[idx], O_WRONLY | O_CREAT, 0644);
-				if ((*fd_output)[output_idx] != -1)
-					printf("output: %s\n", argv[idx]);
-				else
+				if ((*fd_output)[output_idx] == -1)
 				{
 					clear_redir(*fd_input, input_idx, 0, 0);
 					return (clear_redir(*fd_output, output_idx, &(argv[idx]), errno));
@@ -141,9 +139,7 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 			if (check_redir(argv[++idx]) == 1)
 			{
 				(*fd_output)[output_idx] = open(argv[idx], O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if ((*fd_output)[output_idx] != -1)
-					printf("output: %s\n", argv[idx]);
-				else
+				if ((*fd_output)[output_idx] == -1)
 				{
 					clear_redir(*fd_input, input_idx, 0, 0);
 					return (clear_redir(*fd_output, output_idx, &(argv[idx]), errno));
@@ -161,9 +157,7 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 			if (check_redir(argv[++idx]) == 1)
 			{
 				(*fd_input)[input_idx] = open(argv[idx], O_RDONLY);
-				if ((*fd_input)[input_idx] != -1)
-					printf("input: %s\n", argv[idx]);
-				else
+				if ((*fd_input)[input_idx] == -1)
 				{
 					clear_redir(*fd_output, output_idx, 0, 0);
 					return (clear_redir(*fd_input, input_idx, &(argv[idx]), errno));

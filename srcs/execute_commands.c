@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 14:56:53 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 15:31:18 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,11 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
 		new_argv = remove_redirection(new_argv);
-		execute_command(new_argv, env);
 		arr_idx = 0;
+		if (fd_arr_input[arr_idx] != 0)
+			dup2(fd_arr_input[arr_idx++], 0);
+		execute_command(new_argv, env);
+		close(fd_arr_input[arr_idx - 1]);
 		while (fd_arr_input[arr_idx] != 0)
 		{
 			dup2(fd_arr_input[arr_idx], 0);
@@ -82,13 +85,16 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 	else
 	{
 		new_argv = ft_split(argv[idx], ' ');
+		arr_idx = 0;
 		close(fd[0]);
 		dup2(fd[1], 1);
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
 		new_argv = remove_redirection(new_argv);
+		if (fd_arr_input[0] != 0)
+			dup2(fd_arr_input[arr_idx++], 0);
 		execute_command(new_argv, env);
-		arr_idx = 0;
+		close(fd_arr_input[arr_idx - 1]);
 		while (fd_arr_input[arr_idx] != 0)
 		{
 			dup2(fd_arr_input[arr_idx], 0);
@@ -136,8 +142,13 @@ int		execute_commands(char **argv, char ***env)
 	if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 		exit(status);
 	new_argv = remove_redirection(new_argv);
-	execute_command(new_argv, env);
 	arr_idx = 0;
+	if (len == 1 && fd_arr_input[0] != 0)
+	{
+		dup2(fd_arr_input[0], 0);
+		arr_idx++;
+	}
+	execute_command(new_argv, env);
 	while (fd_arr_input[arr_idx] != 0)
 	{
 		dup2(fd_arr_input[arr_idx], 0);
@@ -148,6 +159,11 @@ int		execute_commands(char **argv, char ***env)
 	if (len > 1)
 	{
 		close(fd[0]);
+		dup2(origin_stdin, 0);
+	}
+	else if (len == 1 && fd_arr_input[0] != 0)
+	{
+		close(fd_arr_input[0]);
 		dup2(origin_stdin, 0);
 	}
 	close(origin_stdin);
