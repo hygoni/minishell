@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "execute_command.h"
+#include "free.h"
 #include <stdlib.h>
 
 char	*ft_strjoinc(char *str, char c)
@@ -24,6 +26,28 @@ char	*ft_strjoinc(char *str, char c)
 	new[len - 1] = c;
 	new[len] = '\0';
 	free(str);
+	return (new);
+}
+
+char	***extend_argv_3d(char ***argv, char **str)
+{
+	int		len;
+	char		***new;
+	int		i;
+
+	len = 0;
+	while (argv[len] != NULL)
+		len++;
+	new = malloc(sizeof(char**) * (len + 2));
+	i = 0;
+	while (i < len)
+	{
+		new[i] = argv[i];
+		i++;
+	}
+	new[i++] = str;
+	new[i] = NULL;
+	free(argv);
 	return (new);
 }
 
@@ -45,6 +69,7 @@ char	**extend_argv(char **argv, char *str)
 	}
 	new[i++] = str;
 	new[i] = NULL;
+	free(argv);
 	return (new);
 }
 
@@ -122,15 +147,31 @@ char	**ft_proc_quote_path(char *arg)
 		}
 		else if (arg[i] == ' ')
 		{
-			argv = extend_argv(argv, str);
+			if (ft_strlen(str) > 0)
+				argv = extend_argv(argv, str);
 			str = ft_strdup("");
 			while (arg[i] == ' ')
 				i++;
 		}
+		else if (arg[i] == ';')
+		{	
+			argv = extend_argv(argv, str);
+			argv = extend_argv(argv, ft_strdup(";"));
+			str = ft_strdup("");
+			i++;
+		}
+		else if (arg[i] == '|')
+		{
+			if (ft_strlen(str) > 0)	
+				argv = extend_argv(argv, str);
+			argv = extend_argv(argv, ft_strdup("|"));
+			str = ft_strdup("");
+			i++;
+		}
 		else
 		{
 			tmp = ft_strdup("");
-			while (arg[i] != ' ' && arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
+			while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' ' && arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
 				tmp = ft_strjoinc(tmp, arg[i++]);
 			to_free = str;
 			str = ft_strjoin(str, parse_path(tmp));
@@ -141,16 +182,77 @@ char	**ft_proc_quote_path(char *arg)
 	}
 	return (argv);
 }
-/*
-int		main(int argc, char **argv)
-{
-	char	**ret;
 
-	ret = ft_proc_quote_path(argv[1]);
-	int i = 0;
-	while (ret[i] != NULL)
+int	find(char **argv, char *find)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i] != NULL)
 	{
+		if (!ft_strcmp(argv[i], find))
+			return (i);
 		i++;
 	}
+	return (-1);
 }
-*/
+
+char	***parse_pipes(char **argv2, char ***env)
+{
+	char	***argv3;
+	int	i;
+	int	len;
+	char	**add;
+
+	len = 0;
+	while (argv2[len] != NULL)
+		len++;
+	argv3 = (char***)malloc(sizeof(char**));
+	argv3[0] = NULL;
+	add = (char**)malloc(sizeof(char*));
+	add[0] = NULL;
+	i = 0;
+	while (i < len)
+	{
+		if (!ft_strcmp(argv2[i], "|"))
+		{
+			argv3 = extend_argv_3d(argv3, add);
+			add = (char**)malloc(sizeof(char*));
+			add[0] = NULL;
+		}
+		else
+		{
+			add = extend_argv(add, ft_strdup(argv2[i]));
+		}
+		i++;
+	}
+	argv3 = extend_argv_3d(argv3, add);
+	execute_commands(argv3, env);
+	return (argv3);
+}
+
+
+void	parse_commands(char *cmd_line, char ***env)
+{
+	int	end;
+	int	start;
+	char	**argv;
+	int	len;
+
+	len = 0;
+	argv = ft_proc_quote_path(cmd_line); 
+	end = find(argv, ";");
+	start = 0;
+	while (argv[len] != NULL)
+		len++;
+	while (end >= 0 && start < len)
+	{
+		if (argv[end] != NULL)
+			free(argv[end]);
+		argv[end] = NULL;
+		parse_pipes(&argv[start], env);
+		start = end + 1;
+		end = find(&argv[start], ";");
+	}
+	parse_pipes(&argv[start], env);
+}
