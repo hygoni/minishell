@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:30:41 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 21:07:38 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 16:43:49 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*get_env_value(char **env, char *key);
 char	**cpy_env(char **environ, int len);
 char	**clean_env(char **env, int size);
 int		get_strarr_size(char **arr);
+int		get_strarr_size3(char ***arr);
 void	clean_arg(char **key, char **value, char ***arg, char ***env);
 char	**realloc_env(char **env, int size);
 int		check_key(char ***env, char *key, char *value);

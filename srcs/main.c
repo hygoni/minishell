@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/19 16:39:57 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 16:48:01 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "error.h"
 #include "minishell.h"
 #include "execute_command.h"
+#include "parser.h"
 
 #define EXE_NAME	"minishell"
 #define COMMAND_NOT_FOUND	"command not found"
@@ -100,7 +101,6 @@ int		execute_command(char **argv, char ***env)
 int		main(void)
 {
 	char	*command;
-	char	**new_argv;
 	char	**env;
 	char	*prompt;
 
@@ -114,15 +114,8 @@ int		main(void)
 			free(command);
 			break ;
 		}
-		new_argv = ft_split(command, ';');
+		parse_commands(command, &env);
 		free(command);
-		command = 0;
-		if (*new_argv != 0 && execute_commands(new_argv, &env) == 0)
-		{
-			clean_arg(&prompt, 0, &new_argv, &env);
-			break ;
-		}
-		clean_arg(0, 0, &new_argv, 0);
 	}
 	clean_arg(0, 0, 0, &env);
 }

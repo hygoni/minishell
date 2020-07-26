@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 16:04:54 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 16:47:47 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		write_fd(int write_fd)
 	return (0);
 }
 
-int		execute_pipe(int idx, int *fd, char **argv, char ***env)
+int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 {
 	pid_t	child;
 	int		status;
@@ -74,7 +74,7 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 			execute_pipe(idx - 1, child_fd, argv, env);
 		else
 			wait(&status);
-		new_argv = ft_split(argv[idx], ' ');
+		new_argv = argv[idx];
 		close(child_fd[1]);
 		close(fd[0]);
 		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -108,7 +108,7 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 	}
 	else
 	{
-		new_argv = ft_split(argv[idx], ' ');
+		new_argv = argv[idx];
 		arr_idx = 0;
 		close(fd[0]);
 		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -145,7 +145,7 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 ** last command is execute this shell, other command is execute child
 */
 
-int		execute_commands(char **argv, char ***env)
+int		execute_commands(char ***argv, char ***env)
 {
 	pid_t	child;
 	int		status;
@@ -159,7 +159,7 @@ int		execute_commands(char **argv, char ***env)
 	int		arr_idx;
 	int		tmp_fd;
 
-	len = get_strarr_size(argv);
+	len = get_strarr_size3(argv);
 	origin_stdin = dup(0);
 	origin_stdout = dup(1);
 	if (len > 1)
@@ -175,10 +175,9 @@ int		execute_commands(char **argv, char ***env)
 		wait(&status);
 		close(fd[1]);
 	}
-	new_argv = ft_split(argv[len - 1], ' ');
-	if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
+	if ((status = get_redir(argv[len - 1], &fd_arr_input, &fd_arr_output)) != 0)
 		exit(status);
-	new_argv = remove_redirection(new_argv);
+	new_argv = remove_redirection(argv[len - 1]);
 	arr_idx = 0;
 	if (len == 1 && fd_arr_input[0] != 0)
 	{
@@ -216,6 +215,7 @@ int		execute_commands(char **argv, char ***env)
 	}
 	dup2(origin_stdout, 1);
 	close(origin_stdout);
+	write_fd(1);
 	clean_arg(0, 0, &new_argv, 0);
 	return (1);
 }

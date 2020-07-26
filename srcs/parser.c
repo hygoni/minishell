@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/26 14:51:19 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 16:40:30 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ int	find(char **argv, char *find)
 	return (-1);
 }
 
-char	***parse_pipes(char **argv2, char ***env)
+void	parse_pipes(char **argv2, char ***env)
 {
 	char	***argv3;
 	int	i;
@@ -228,7 +228,7 @@ char	***parse_pipes(char **argv2, char ***env)
 	}
 	argv3 = extend_argv_3d(argv3, add);
 	execute_commands(argv3, env);
-	return (argv3);
+	free_3d(argv3);
 }
 
 

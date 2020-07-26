@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_command.h                                  :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/19 16:39:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 16:47:00 by jinwkim          ###   ########.fr       */
+/*   Created: 2020/07/26 16:37:22 by jinwkim           #+#    #+#             */
+/*   Updated: 2020/07/26 16:37:33 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTE_COMMAND_H
-# define EXECUTE_COMMAND_H
-int		execute_command(char **argv, char ***env);
-int		execute_commands(char ***argv, char ***env);
-char	**extend_argv(char **argv, char *str);
+#ifndef PARSER_H
+# define PARSER_H
+
+void	parse_commands(char *cmd_line, char ***env);
+
 #endif
