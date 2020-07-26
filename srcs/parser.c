@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/26 16:40:30 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 18:08:51 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,9 @@ char	**ft_proc_quote_path(char *arg)
 				i++;
 		}
 		else if (arg[i] == ';')
-		{	
-			argv = extend_argv(argv, str);
+		{
+			if (ft_strlen(str) > 0)	
+				argv = extend_argv(argv, str);
 			argv = extend_argv(argv, ft_strdup(";"));
 			str = ft_strdup("");
 			i++;
@@ -253,6 +254,9 @@ void	parse_commands(char *cmd_line, char ***env)
 		parse_pipes(&argv[start], env);
 		start = end + 1;
 		end = find(&argv[start], ";");
+		if (end >= 0)
+			end += start;
 	}
-	parse_pipes(&argv[start], env);
+	if (argv[start] != NULL && ft_strcmp(argv[start], ";") != 0)
+		parse_pipes(&argv[start], env);
 }

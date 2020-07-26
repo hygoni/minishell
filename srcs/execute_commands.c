@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 16:47:47 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 17:58:11 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ int		execute_commands(char ***argv, char ***env)
 		arr_idx++;
 	}
 	tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(tmp_fd, 1);
+	//dup2(tmp_fd, 1);
 	execute_command(new_argv, env);
 	while (fd_arr_input[arr_idx] != 0)
 	{

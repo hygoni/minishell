@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/26 16:48:01 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 18:09:24 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ int		execute_command(char **argv, char ***env)
 	int		len;
 	int		size;
 
-	command = argv[0];
+	if ((command = argv[0]) == 0)
+		return (1);
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
 	if (ft_strcmp(command, "echo") == 0)
