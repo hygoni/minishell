@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 15:16:33 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 16:56:58 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 		{
 			if (check_redir(argv[++idx]) == 1)
 			{
-				(*fd_output)[output_idx] = open(argv[idx], O_WRONLY | O_CREAT, 0644);
+				(*fd_output)[output_idx] = open(argv[idx], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				if ((*fd_output)[output_idx] == -1)
 				{
 					clear_redir(*fd_input, input_idx, 0, 0);
