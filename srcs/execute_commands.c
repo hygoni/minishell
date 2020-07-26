@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 02:11:00 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 14:56:53 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,28 @@
 #include "libft.h"
 #include "redirection.h"
 
+char	**remove_redirection(char **argv)
+{
+	char	**removed;
+	int		i;
+
+	removed = (char**)malloc(sizeof(char*));
+	removed[0] = NULL;
+	i = 0;
+	while (argv[i] != NULL)
+	{
+		if (!ft_strcmp(argv[i], "<") || !ft_strcmp(argv[i], ">") ||
+				!ft_strcmp(argv[i], ">>"))
+			i++;
+		else
+		{
+			removed = extend_argv(removed, ft_strdup(argv[i]));
+		}
+		i++;
+	}
+	return (removed);
+}
+
 int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 {
 	pid_t	child;
@@ -28,7 +50,6 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 	int		*fd_arr_input;
 	int		*fd_arr_output;
 	int		arr_idx;
-	char	*file;
 
 	if (idx != 0)
 	{
@@ -45,6 +66,7 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 		dup2(fd[1], 1);
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
+		new_argv = remove_redirection(new_argv);
 		execute_command(new_argv, env);
 		arr_idx = 0;
 		while (fd_arr_input[arr_idx] != 0)
@@ -64,6 +86,7 @@ int		execute_pipe(int idx, int *fd, char **argv, char ***env)
 		dup2(fd[1], 1);
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
+		new_argv = remove_redirection(new_argv);
 		execute_command(new_argv, env);
 		arr_idx = 0;
 		while (fd_arr_input[arr_idx] != 0)
@@ -112,6 +135,7 @@ int		execute_commands(char **argv, char ***env)
 	new_argv = ft_split(argv[len - 1], ' ');
 	if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 		exit(status);
+	new_argv = remove_redirection(new_argv);
 	execute_command(new_argv, env);
 	arr_idx = 0;
 	while (fd_arr_input[arr_idx] != 0)

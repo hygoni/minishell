@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:39:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/23 08:09:53 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/26 14:32:01 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,4 +14,5 @@
 # define EXECUTE_COMMAND_H
 int		execute_command(char **argv, char ***env);
 int		execute_commands(char **argv, char ***env);
+char	**extend_argv(char **argv, char *str);
 #endif

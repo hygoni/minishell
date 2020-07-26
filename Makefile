@@ -11,7 +11,7 @@ ${NAME}: ${OBJS}
 	${CC} ${CFLAGS} ${INC} ${LIBFT} ${OBJS} -o ${NAME}
 
 %.o : %.c
-	${CC} ${CFLAGS} ${INC} -c $< -o $@
+	${CC} ${CFLAGS} ${INC} -c $< -o $@ -g
 
 all: ${NAME}
 

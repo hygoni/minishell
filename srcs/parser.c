@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/22 11:51:36 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/26 14:51:19 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	**extend_argv(char **argv, char *str)
 	}
 	new[i++] = str;
 	new[i] = NULL;
-	free(argv);
 	return (new);
 }
 
