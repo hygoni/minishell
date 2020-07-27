@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 02:29:07 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 02:35:14 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,4 +158,6 @@ int		execute_commands(char ***argv, char ***env)
 	len = get_strarr_size3(argv);
 	if (check_pipe(argv, env, len, fd) == 1)
 		return (1);
+	else
+		return (0);
 }
