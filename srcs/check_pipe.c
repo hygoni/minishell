@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 02:10:01 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 02:23:04 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,22 @@ int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
 	return (0);
 }
 
-int		init_redir_output(int len, int **fd_arr, int *tmp, int *fd, int *origin)
+int		init_redir_output(int *fd_out, int *origin)
 {
 	int		arr_idx;
 
-	if (len > 1)
-		close(fd[0]);
-	else if (len == 1 && fd_arr[0][0] != 0)
-		close(tmp[0]);
 	dup2(origin[0], 0);
 	close(origin[0]);
-	close(tmp[1]);
 	arr_idx = 0;
-	while (fd_arr[1][arr_idx] != 0)
+	while (fd_out[arr_idx] != 0)
 	{
-		write_fd(fd_arr[1][arr_idx]);
-		close(fd_arr[1][arr_idx]);
+		write_fd(fd_out[arr_idx]);
+		close(fd_out[arr_idx]);
 		arr_idx++;
 	}
 	dup2(origin[1], 1);
 	close(origin[1]);
-	if (fd_arr[1][0] == 0)
+	if (fd_out[0] == 0)
 		write_fd(1);
 	return (0);
 }
@@ -104,6 +99,11 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	new_argv = remove_redirection(argv[len - 1]);
 	init_redir_input(len, fd_arr[0], tmp, fd);
 	execute_command(new_argv, env);
-	init_redir_output(len, fd_arr, tmp, fd, origin);
+	if (len > 1)
+		close(fd[0]);
+	else if (len == 1 && fd_arr[0][0] != 0)
+		close(tmp[0]);
+	close(tmp[1]);
+	init_redir_output(fd_arr[1], origin);
 	return (0);
 }
