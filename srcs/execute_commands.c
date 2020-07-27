@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/27 18:01:52 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 02:29:07 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,83 +152,10 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 
 int		execute_commands(char ***argv, char ***env)
 {
-	pid_t	child;
-	int		status;
 	int		len;
-	char	**new_argv;
 	int		fd[2];
-	int		origin_stdin;
-	int		origin_stdout;
-	int		*fd_arr_input;
-	int		*fd_arr_output;
-	int		arr_idx;
-	int		tmp_fd[2];
 
 	len = get_strarr_size3(argv);
-	origin_stdin = dup(0);
-	origin_stdout = dup(1);
-	if (len > 1)
-	{
-		pipe(fd);
-		dup2(fd[0], 0);
-		child = fork();
-		if (child == 0)
-		{
-			execute_pipe(len - 2, fd, argv, env);
-			exit(0);
-		}
-		wait(&status);
-		close(fd[1]);
-	}
-	if ((status = get_redir(argv[len - 1], &fd_arr_input, &fd_arr_output)) != 0)
-		exit(status);
-	new_argv = remove_redirection(argv[len - 1]);
-	arr_idx = 0;
-	if (len == 1 && fd_arr_input[0] != 0)
-	{
-		tmp_fd[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		while (fd_arr_input[arr_idx] != 0)
-		{
-			read_write_fd(fd_arr_input[arr_idx], tmp_fd[0]);
-			arr_idx++;
-		}
-		close(tmp_fd[0]);
-		tmp_fd[0] = open(".input", O_RDONLY);
-		dup2(tmp_fd[0], 0);
-	}
-	else if (len > 1)
-	{
-		while (fd_arr_input[arr_idx] != 0)
-		{
-			read_write_fd(fd_arr_input[arr_idx], fd[0]);
-			arr_idx++;
-		}
-	}
-	tmp_fd[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(tmp_fd[1], 1);
-	execute_command(new_argv, env);
-	if (len > 1)
-	{
-		close(fd[0]);
-		dup2(origin_stdin, 0);
-	}
-	else if (len == 1 && fd_arr_input[0] != 0)
-	{
-		close(tmp_fd[0]);
-		dup2(origin_stdin, 0);
-	}
-	close(origin_stdin);
-	arr_idx = 0;
-	close(tmp_fd[1]);
-	while (fd_arr_output[arr_idx] != 0)
-	{
-		write_fd(fd_arr_output[arr_idx]);
-		close(fd_arr_output[arr_idx]);
-		arr_idx++;
-	}
-	dup2(origin_stdout, 1);
-	close(origin_stdout);
-	write_fd(1);
-	clean_arg(0, 0, &new_argv, 0);
-	return (1);
+	if (check_pipe(argv, env, len, fd) == 1)
+		return (1);
 }
