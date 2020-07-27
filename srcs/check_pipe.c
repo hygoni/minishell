@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 02:23:04 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 02:44:11 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,20 @@
 int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
 {
 	int		arr_idx;
+	char	c;
 
 	arr_idx = 0;
-	if (len == 1 && fd_input[0] != 0)
+	tmp[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (len > 1)
 	{
-		tmp[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		while (fd_input[arr_idx] != 0)
-			read_write_fd(fd_input[arr_idx++], tmp[0]);
-		close(tmp[0]);
-		tmp[0] = open(".input", O_RDONLY);
-		dup2(tmp[0], 0);
+		while (read(fd[0], &c, 1) > 0)
+			write(tmp[0], &c, 1);
 	}
-	else if (len > 1)
-	{
-		while (fd_input[arr_idx] != 0)
-			read_write_fd(fd_input[arr_idx++], fd[0]);
-	}
+	while (fd_input[arr_idx] != 0)
+		read_write_fd(fd_input[arr_idx++], tmp[0]);
+	close(tmp[0]);
+	tmp[0] = open(".input", O_RDONLY);
+	dup2(tmp[0], 0);
 	tmp[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(tmp[1], 1);
 	return (0);
