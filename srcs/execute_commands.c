@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 17:58:11 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/27 18:01:52 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@ int		write_fd(int write_fd)
 	return (0);
 }
 
+int		read_write_fd(int read_fd, int write_fd)
+{
+	char	c;
+
+	while (read(read_fd, &c, 1) > 0)
+		write(write_fd, &c, 1);
+	close(read_fd);
+	return (0);
+}
+
 int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 {
 	pid_t	child;
@@ -75,25 +85,20 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 		else
 			wait(&status);
 		new_argv = argv[idx];
-		close(child_fd[1]);
-		close(fd[0]);
-		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		dup2(tmp_fd, 1);
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
 		new_argv = remove_redirection(new_argv);
 		arr_idx = 0;
-		if (fd_arr_input[arr_idx] != 0)
-			dup2(fd_arr_input[arr_idx++], 0);
-		execute_command(new_argv, env);
-		close(fd_arr_input[arr_idx - 1]);
 		while (fd_arr_input[arr_idx] != 0)
 		{
-			dup2(fd_arr_input[arr_idx], 0);
-			execute_command(new_argv, env);
-			close(fd_arr_input[arr_idx]);
+			read_write_fd(fd_arr_input[arr_idx], child_fd[0]);
 			arr_idx++;
 		}
+		close(child_fd[1]);
+		close(fd[0]);
+		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		dup2(tmp_fd, 1);
+		execute_command(new_argv, env);
 		arr_idx = 0;
 		close(tmp_fd);
 		while (fd_arr_output[arr_idx] != 0)
@@ -110,23 +115,22 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 	{
 		new_argv = argv[idx];
 		arr_idx = 0;
-		close(fd[0]);
-		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		dup2(tmp_fd, 1);
 		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
 			exit(status);
 		new_argv = remove_redirection(new_argv);
-		if (fd_arr_input[0] != 0)
-			dup2(fd_arr_input[arr_idx++], 0);
-		execute_command(new_argv, env);
-		close(fd_arr_input[arr_idx - 1]);
+		child_fd[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		while (fd_arr_input[arr_idx] != 0)
 		{
-			dup2(fd_arr_input[arr_idx], 0);
-			execute_command(new_argv, env);
-			close(fd_arr_input[arr_idx]);
+			read_write_fd(fd_arr_input[arr_idx], child_fd[0]);
 			arr_idx++;
 		}
+		close(child_fd[0]);
+		child_fd[0] = open(".input", O_RDONLY);
+		dup2(child_fd[0], 0);
+		close(fd[0]);
+		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		dup2(tmp_fd, 1);
+		execute_command(new_argv, env);
 		arr_idx = 0;
 		close(tmp_fd);
 		while (fd_arr_output[arr_idx] != 0)
@@ -136,6 +140,7 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 			arr_idx++;
 		}
 		write_fd(fd[1]);
+		close(child_fd[0]);
 		exit(0);
 	}
 }
@@ -157,7 +162,7 @@ int		execute_commands(char ***argv, char ***env)
 	int		*fd_arr_input;
 	int		*fd_arr_output;
 	int		arr_idx;
-	int		tmp_fd;
+	int		tmp_fd[2];
 
 	len = get_strarr_size3(argv);
 	origin_stdin = dup(0);
@@ -181,19 +186,27 @@ int		execute_commands(char ***argv, char ***env)
 	arr_idx = 0;
 	if (len == 1 && fd_arr_input[0] != 0)
 	{
-		dup2(fd_arr_input[0], 0);
-		arr_idx++;
+		tmp_fd[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		while (fd_arr_input[arr_idx] != 0)
+		{
+			read_write_fd(fd_arr_input[arr_idx], tmp_fd[0]);
+			arr_idx++;
+		}
+		close(tmp_fd[0]);
+		tmp_fd[0] = open(".input", O_RDONLY);
+		dup2(tmp_fd[0], 0);
 	}
-	tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	//dup2(tmp_fd, 1);
-	execute_command(new_argv, env);
-	while (fd_arr_input[arr_idx] != 0)
+	else if (len > 1)
 	{
-		dup2(fd_arr_input[arr_idx], 0);
-		execute_command(new_argv, env);
-		close(fd_arr_input[arr_idx]);
-		arr_idx++;
+		while (fd_arr_input[arr_idx] != 0)
+		{
+			read_write_fd(fd_arr_input[arr_idx], fd[0]);
+			arr_idx++;
+		}
 	}
+	tmp_fd[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	dup2(tmp_fd[1], 1);
+	execute_command(new_argv, env);
 	if (len > 1)
 	{
 		close(fd[0]);
@@ -201,12 +214,12 @@ int		execute_commands(char ***argv, char ***env)
 	}
 	else if (len == 1 && fd_arr_input[0] != 0)
 	{
-		close(fd_arr_input[0]);
+		close(tmp_fd[0]);
 		dup2(origin_stdin, 0);
 	}
 	close(origin_stdin);
 	arr_idx = 0;
-	close(tmp_fd);
+	close(tmp_fd[1]);
 	while (fd_arr_output[arr_idx] != 0)
 	{
 		write_fd(fd_arr_output[arr_idx]);
