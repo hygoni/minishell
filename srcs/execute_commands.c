@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 02:35:14 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 11:37:17 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,85 +64,50 @@ int		read_write_fd(int read_fd, int write_fd)
 	return (0);
 }
 
-int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
+int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 {
 	pid_t	child;
 	int		status;
-	char	**new_argv;
-	int		child_fd[2];
-	int		*fd_arr_input;
-	int		*fd_arr_output;
-	int		arr_idx;
-	int		tmp_fd;
 
 	if (idx != 0)
 	{
 		pipe(child_fd);
-		dup2(child_fd[0], 0);
 		child = fork();
 		if (child == 0)
 			execute_pipe(idx - 1, child_fd, argv, env);
 		else
 			wait(&status);
-		new_argv = argv[idx];
-		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
-			exit(status);
-		new_argv = remove_redirection(new_argv);
-		arr_idx = 0;
-		while (fd_arr_input[arr_idx] != 0)
-		{
-			read_write_fd(fd_arr_input[arr_idx], child_fd[0]);
-			arr_idx++;
-		}
+	}
+	return (0);
+}
+
+int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
+{
+	int		status;
+	char	**new_argv;
+	int		child_fd[2];
+	int		**fd_arr;
+	int		tmp[2];
+
+	fd_arr = (int **)malloc(sizeof(int *) * 2);
+	pipe_recursive(idx, child_fd, argv, env);
+	if ((status = get_redir(argv[idx], &(fd_arr[0]), &(fd_arr[1]))) != 0)
+		exit(status);
+	new_argv = remove_redirection(argv[idx]);
+	if (idx != 0)
+	{
 		close(child_fd[1]);
+		init_redir_input(2, fd_arr[0], tmp, child_fd);
 		close(fd[0]);
-		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		dup2(tmp_fd, 1);
-		execute_command(new_argv, env);
-		arr_idx = 0;
-		close(tmp_fd);
-		while (fd_arr_output[arr_idx] != 0)
-		{
-			write_fd(fd_arr_output[arr_idx]);
-			close(fd_arr_output[arr_idx]);
-			arr_idx++;
-		}
-		write_fd(fd[1]);
-		clean_arg(0, 0, &new_argv, 0);
-		exit(0);
 	}
 	else
-	{
-		new_argv = argv[idx];
-		arr_idx = 0;
-		if ((status = get_redir(new_argv, &fd_arr_input, &fd_arr_output)) != 0)
-			exit(status);
-		new_argv = remove_redirection(new_argv);
-		child_fd[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		while (fd_arr_input[arr_idx] != 0)
-		{
-			read_write_fd(fd_arr_input[arr_idx], child_fd[0]);
-			arr_idx++;
-		}
-		close(child_fd[0]);
-		child_fd[0] = open(".input", O_RDONLY);
-		dup2(child_fd[0], 0);
-		close(fd[0]);
-		tmp_fd = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		dup2(tmp_fd, 1);
-		execute_command(new_argv, env);
-		arr_idx = 0;
-		close(tmp_fd);
-		while (fd_arr_output[arr_idx] != 0)
-		{
-			write_fd(fd_arr_output[arr_idx]);
-			close(fd_arr_output[arr_idx]);
-			arr_idx++;
-		}
-		write_fd(fd[1]);
-		close(child_fd[0]);
-		exit(0);
-	}
+		init_redir_input(0, fd_arr[0], child_fd, fd);
+	execute_command(new_argv, env);
+	if (idx != 0)
+		close(tmp[1]);
+	init_redir_output(0, fd_arr[1], fd);
+	clean_arg(0, 0, &new_argv, 0);
+	exit(0);
 }
 
 /*
