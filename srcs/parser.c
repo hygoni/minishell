@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/26 18:08:51 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 21:08:24 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoinc(char *str, char c)
 {
 	int		len;
 	char	*new;
-	
+
 	len = ft_strlen(str) + 1;
 	new = malloc(sizeof(char) * (len + 1));
 	ft_strcpy(new, str);
@@ -35,7 +35,7 @@ char	*ft_strjoinc(char *str, char c)
 char	***extend_argv_3d(char ***argv, char **str)
 {
 	int		len;
-	char		***new;
+	char	***new;
 	int		i;
 
 	len = 0;
@@ -78,7 +78,7 @@ char	**extend_argv(char **argv, char *str)
 
 char	*parse_path(char *arg, char ***env)
 {
-	int	i;
+	int		i;
 	char	*parsed;
 	char	*token;
 	char	*to_free;
@@ -115,13 +115,120 @@ char	*parse_path(char *arg, char ***env)
 	return (parsed);
 }
 
+char	*proc_single_quote(int *idx, char *arg, char *str)
+{
+	char	*tmp;
+	int		i;
+	char	*to_free;
+
+	i = *idx;
+	i++;
+	tmp = ft_strdup("");
+	while (arg[i] != '\'' && arg[i] != '\0')
+		tmp = ft_strjoinc(tmp, arg[i++]);
+	if (arg[i] == '\'')
+		i++;
+	to_free = str;
+	str = ft_strjoin(str, tmp);
+	free(to_free);
+	free(tmp);
+	*idx = i;
+	return (str);
+}
+
+char	*proc_double_quote(int *idx, char *arg, char *str, char ***env)
+{
+	int		i;
+	char	*tmp;
+	char	*to_free;
+
+	i = *idx;
+	i++;
+	tmp = ft_strdup("");
+	while (arg[i] != '"' && arg[i] != '\0')
+	{
+		if (arg[i] == '\\')
+			i++;
+		tmp = ft_strjoinc(tmp, arg[i++]);
+	}
+	if (arg[i] == '"')
+		i++;
+	to_free = str;
+	str = ft_strjoin(str, parse_path(tmp, env));
+	free(to_free);
+	*idx = i;
+	return (str);
+}
+
+char	*proc_space(int *idx, char *arg, char *str, char ***argv)
+{
+	int		i;
+
+	i = *idx;
+	if (ft_strlen(str) > 0)
+		*argv = extend_argv(*argv, str);
+	str = ft_strdup("");
+	while (arg[i] == ' ')
+		i++;
+	*idx = i;
+	return (str);
+}
+
+char	*proc_semicolon(int *idx, char *str, char ***argv)
+{
+	int		i;
+
+	i = *idx;
+	if (ft_strlen(str) > 0)
+		*argv = extend_argv(*argv, str);
+	*argv = extend_argv(*argv, ft_strdup(";"));
+	str = ft_strdup("");
+	i++;
+	*idx = i;
+	return (str);
+}
+
+char	*proc_bar(int *idx, char *str, char ***argv)
+{
+	int		i;
+
+	i = *idx;
+	if (ft_strlen(str) > 0)
+		*argv = extend_argv(*argv, str);
+	*argv = extend_argv(*argv, ft_strdup("|"));
+	str = ft_strdup("");
+	i++;
+	*idx = i;
+	return (str);
+}
+
+char	*proc_str(int *idx, char *arg, char *str, char ***env)
+{
+	int		i;
+	char	*tmp;
+	char	*to_free;
+
+	i = *idx;
+	tmp = ft_strdup("");
+	while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' '
+			&& arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
+	{
+		if (arg[i] == '\\')
+			i++;
+		tmp = ft_strjoinc(tmp, arg[i++]);
+	}
+	to_free = str;
+	str = ft_strjoin(str, parse_path(tmp, env));
+	free(to_free);
+	*idx = i;
+	return (str);
+}
+
 char	**ft_proc_quote_path(char *arg, char ***env)
 {
 	char	*str;
 	int		i;
 	char	**argv;
-	char	*to_free;
-	char	*tmp;
 
 	argv = malloc(sizeof(char*));
 	argv[0] = NULL;
@@ -130,78 +237,24 @@ char	**ft_proc_quote_path(char *arg, char ***env)
 	while (arg[i] != '\0')
 	{
 		if (arg[i] == '\'')
-		{
-			i++;
-			tmp = ft_strdup("");
-			while (arg[i] != '\'' && arg[i] != '\0')
-				tmp = ft_strjoinc(tmp, arg[i++]);
-			if (arg[i] == '\'')
-				i++;
-			to_free = str;
-			str = ft_strjoin(str, tmp);
-			free(to_free);
-			free(tmp);
-		}
+			str = proc_single_quote(&i, arg, str);
 		else if (arg[i] == '"')
-		{
-			i++;
-			tmp = ft_strdup("");
-			while (arg[i] != '"' && arg[i] !='\0')
-			{
-				if (arg[i] == '\\')
-					i++;
-				tmp = ft_strjoinc(tmp, arg[i++]);
-			}
-			if (arg[i] == '"')
-				i++;
-			to_free = str;
-			str = ft_strjoin(str, parse_path(tmp, env));
-			free(to_free);
-		}
+			str = proc_double_quote(&i, arg, str, env);
 		else if (arg[i] == ' ')
-		{
-			if (ft_strlen(str) > 0)
-				argv = extend_argv(argv, str);
-			str = ft_strdup("");
-			while (arg[i] == ' ')
-				i++;
-		}
+			str = proc_space(&i, arg, str, &argv);
 		else if (arg[i] == ';')
-		{
-			if (ft_strlen(str) > 0)	
-				argv = extend_argv(argv, str);
-			argv = extend_argv(argv, ft_strdup(";"));
-			str = ft_strdup("");
-			i++;
-		}
+			str = proc_semicolon(&i, str, &argv);
 		else if (arg[i] == '|')
-		{
-			if (ft_strlen(str) > 0)	
-				argv = extend_argv(argv, str);
-			argv = extend_argv(argv, ft_strdup("|"));
-			str = ft_strdup("");
-			i++;
-		}
+			str = proc_bar(&i, str, &argv);
 		else
-		{
-			tmp = ft_strdup("");
-			while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' ' && arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
-			{	
-				if (arg[i] == '\\')
-					i++;
-				tmp = ft_strjoinc(tmp, arg[i++]);
-			}
-			to_free = str;
-			str = ft_strjoin(str, parse_path(tmp, env));
-			free(to_free);
-		}
+			str = proc_str(&i, arg, str, env);
 		if (arg[i] == '\0')
 			argv = extend_argv(argv, str);
 	}
 	return (argv);
 }
 
-int	find(char **argv, char *find)
+int		find(char **argv, char *find)
 {
 	int	i;
 
@@ -218,8 +271,8 @@ int	find(char **argv, char *find)
 void	parse_pipes(char **argv2, char ***env)
 {
 	char	***argv3;
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 	char	**add;
 
 	len = 0;
@@ -249,16 +302,15 @@ void	parse_pipes(char **argv2, char ***env)
 	free_3d(argv3);
 }
 
-
 void	parse_commands(char *cmd_line, char ***env)
 {
-	int	end;
-	int	start;
+	int		end;
+	int		start;
 	char	**argv;
-	int	len;
+	int		len;
 
 	len = 0;
-	argv = ft_proc_quote_path(cmd_line, env); 
+	argv = ft_proc_quote_path(cmd_line, env);
 	end = find(argv, ";");
 	start = 0;
 	while (argv[len] != NULL)
