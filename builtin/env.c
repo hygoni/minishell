@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include "libft.h"
 
-void		ft_env(char **env)
+int		ft_env(char **env)
 {
 	int		idx;
 
@@ -23,4 +24,5 @@ void		ft_env(char **env)
 		ft_putendl_fd(env[idx], 1);
 		idx++;
 	}
+	return (EXIT_SUCCESS);
 }

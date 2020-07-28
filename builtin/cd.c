@@ -69,7 +69,7 @@ void	cd_sub(char *buf, char *path)
 	}
 }
 
-int		cd(int argc, char **argv, char **environ)
+int		ft_cd(int argc, char **argv, char **environ)
 {
 	char	buf[PATH_MAX];
 	int		ret;

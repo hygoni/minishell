@@ -19,6 +19,8 @@
 #include "libft.h"
 #include "redirection.h"
 
+extern int g_status;
+
 char	**remove_redirection(char **argv)
 {
 	char	**removed;
@@ -67,7 +69,6 @@ int		read_write_fd(int read_fd, int write_fd)
 int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 {
 	pid_t	child;
-	int		status;
 
 	if (idx != 0)
 	{
@@ -76,14 +77,13 @@ int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 		if (child == 0)
 			execute_pipe(idx - 1, child_fd, argv, env);
 		else
-			wait(&status);
+			wait(&g_status);
 	}
 	return (0);
 }
 
 int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 {
-	int		status;
 	char	**new_argv;
 	int		child_fd[2];
 	int		**fd_arr;
@@ -91,8 +91,8 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 
 	fd_arr = (int **)malloc(sizeof(int *) * 2);
 	pipe_recursive(idx, child_fd, argv, env);
-	if ((status = get_redir(argv[idx], &(fd_arr[0]), &(fd_arr[1]))) != 0)
-		exit(status);
+	if ((g_status = get_redir(argv[idx], &(fd_arr[0]), &(fd_arr[1]))) != 0)
+		exit(g_status);
 	new_argv = remove_redirection(argv[idx]);
 	if (idx != 0)
 	{

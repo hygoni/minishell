@@ -22,9 +22,9 @@ int		get_strarr_size3(char ***arr);
 void	clean_arg(char **key, char **value, char ***arg, char ***env);
 char	**realloc_env(char **env, int size);
 int		check_key(char ***env, char *key, char *value);
-void	ft_export(int argc, char **argv, char ***env);
-void	ft_unset(int argc, char **argv, char ***env);
-void	ft_env(char **env);
+int	ft_export(int argc, char **argv, char ***env);
+int	ft_unset(int argc, char **argv, char ***env);
+int	ft_env(char **env);
 int		check_validate(char *str);
 void	ft_export_one(char *key, char *value, char **env);
 

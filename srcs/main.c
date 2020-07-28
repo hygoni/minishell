@@ -27,7 +27,8 @@
 #define EXE_NAME	"minishell"
 #define COMMAND_NOT_FOUND	"command not found"
 
-extern char **environ;
+extern char	**environ;
+int		g_status;
 
 int		check_env_key(char *str, char *key)
 {
@@ -45,7 +46,6 @@ void	execute_binary(char **argv, char **env)
 {
 	pid_t	child;
 	pid_t	pid;
-	int		state;
 	char	*exe_path;
 
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
@@ -57,7 +57,7 @@ void	execute_binary(char **argv, char **env)
 	if (child != 0)
 	{
 		child = fork();
-		pid = wait(&state);
+		pid = wait(&g_status);
 		free(exe_path);
 	}
 	if (child == 0)
@@ -81,19 +81,19 @@ int		execute_command(char **argv, char ***env)
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
 	if (ft_strcmp(command, "echo") == 0)
-		echo(size, argv);
+		g_status = ft_echo(size, argv);
 	else if (ft_strcmp(command, "cd") == 0)
-		cd(size, argv, *env);
+		g_status = ft_cd(size, argv, *env);
 	else if (ft_strcmp(command, "pwd") == 0)
-		pwd(size, *env);
+		g_status = ft_pwd(size, *env);
 	else if (ft_strcmp(command, "env") == 0)
-		ft_env(*env);
+		g_status = ft_env(*env);
 	else if (ft_strcmp(command, "export") == 0)
-		ft_export(size, argv, env);
+		g_status = ft_export(size, argv, env);
 	else if (ft_strcmp(command, "unset") == 0)
-		ft_unset(size, argv, env);
+		g_status = ft_unset(size, argv, env);
 	else if (ft_strcmp(command, "exit") == 0)
-		ft_exit(argv[1]);
+		g_status = ft_exit(argv[1]);
 	else
 		execute_binary(argv, *env);
 	return (1);

@@ -56,7 +56,7 @@ void		env_arr_move(char **env, int idx, int len)
 	}
 }
 
-void		ft_unset(int argc, char **argv, char ***env)
+int		ft_unset(int argc, char **argv, char ***env)
 {
 	int		idx;
 	int		remove_idx;
@@ -79,7 +79,8 @@ void		ft_unset(int argc, char **argv, char ***env)
 			}
 		}
 		else
-			error_msg_param(argv[0], "not a valid identifier", argv[idx]);
+			return (error_msg_param(argv[0], "not a valid identifier", argv[idx]));
 		idx++;
 	}
+	return (EXIT_SUCCESS);
 }

@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 #define TRUE 1
 #define FALSE 0
 
-void	echo(int argc, char **argv)
+int	ft_echo(int argc, char **argv)
 {
 	int		enter;
 	int		i;
@@ -35,4 +36,5 @@ void	echo(int argc, char **argv)
 	}
 	if (enter)
 		ft_putchar('\n');
+	return (EXIT_SUCCESS);
 }

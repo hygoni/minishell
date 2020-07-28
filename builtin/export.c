@@ -53,7 +53,7 @@ int			set_value(char *str, char **value)
 	return (1);
 }
 
-void		ft_export(int argc, char **argv, char ***env)
+int		ft_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;
@@ -71,13 +71,14 @@ void		ft_export(int argc, char **argv, char ***env)
 			set_key(argv[idx], &key);
 			set_value(argv[idx], &value);
 			if (check_validate(key) == 0)
-				error_msg_param(argv[0], "not valid in this context", key);
+				return (error_msg_param(argv[0], "not valid in this context", key));
 			else if (check_key(env, key, value) == 0)
-				error_msg(argv[0], "error");
+				return (error_msg(argv[0], "error"));
 		}
 		clean_arg(&key, &value, 0, 0);
 		idx++;
 	}
+	return (EXIT_SUCCESS);
 }
 
 void		ft_export_one(char *key, char *value, char **env)

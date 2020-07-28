@@ -13,9 +13,9 @@
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-int		cd(int argc, char **argv, char **environ);
-void	echo(int argc, char **argv);
-void	ft_exit(char *status);
-int		pwd(int argc, char **environ);
+int		ft_cd(int argc, char **argv, char **environ);
+int		ft_echo(int argc, char **argv);
+int		ft_exit(char *status);
+int		ft_pwd(int argc, char **environ);
 
 #endif

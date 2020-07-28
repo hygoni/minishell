@@ -13,13 +13,13 @@
 #include <stdlib.h>
 #include "libft.h"
 
+extern int g_status;
+
 void	ft_exit(char *status)
 {
-	int		val;
-
 	if (status != 0)
-		val = ft_atoi(status);
+		g_status = ft_atoi(status);
 	else
-		val = 0;
-	exit(val);
+		g_status = 0;
+	exit(g_status);
 }

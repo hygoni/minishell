@@ -24,7 +24,7 @@
 #define PWD						"PWD"
 #define ENV_ERROR				"environment variables error"
 
-int		pwd(int argc, char **environ)
+int		ft_pwd(int argc, char **environ)
 {
 	char	*logical;
 
