@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 14:17:15 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 14:27:46 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ int		get_redir_input_size(char **argv)
 
 	idx = 0;
 	size = 0;
-
 	while (argv[idx] != 0)
 	{
 		if (ft_strcmp(argv[idx], "<") == 0)
@@ -98,30 +97,30 @@ int		get_redir_input_size(char **argv)
 	return (size);
 }
 
-int		insert_fd(char **argv, int	**fd, int *fd_idx, int type)
+int		insert_fd(char **argv, int **fd, int *idx, int type)
 {
-	int		idx;
+	int		i;
 
-	idx = (type == 2) ? 0 : 1;
+	i = (type == 2) ? 0 : 1;
 	if (check_redir(*argv) == 1)
 	{
 		if (type == 0)
-			fd[idx][fd_idx[idx]] = open(*argv, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fd[i][idx[i]] = open(*argv, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (type == 1)
-			fd[idx][fd_idx[idx]] = open(*argv, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			fd[i][idx[i]] = open(*argv, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
-			fd[idx][fd_idx[idx]] = open(*argv, O_RDONLY);
-		if ((fd[idx])[fd_idx[idx]] == -1)
+			fd[i][idx[i]] = open(*argv, O_RDONLY);
+		if ((fd[i])[idx[i]] == -1)
 		{
-			clear_redir(fd[(idx + 1) % 2], fd_idx[(idx + 1) % 2], 0, 0);
-			return (clear_redir(fd[idx], fd_idx[idx], argv, errno));
+			clear_redir(fd[(i + 1) % 2], idx[(i + 1) % 2], 0, 0);
+			return (clear_redir(fd[i], idx[i], argv, errno));
 		}
-		fd_idx[idx] = fd_idx[idx] + 1;
+		idx[i] = idx[i] + 1;
 	}
 	else
 	{
-		clear_redir(fd[(idx + 1) % 2], fd_idx[(idx + 1) % 2], 0, 0);
-		return (clear_redir(fd[idx], fd_idx[idx], argv, errno));
+		clear_redir(fd[(i + 1) % 2], idx[(i + 1) % 2], 0, 0);
+		return (clear_redir(fd[i], idx[i], argv, errno));
 	}
 	return (0);
 }
@@ -165,7 +164,7 @@ int		get_redir(char **argv, int **fd_input, int **fd_output)
 		if (ft_strcmp(argv[idx], ">") == 0)
 			result = insert_fd(&(argv[++idx]), fd, fd_idx, 0);
 		else if (ft_strcmp(argv[idx], ">>") == 0)
-			result = insert_fd(&(argv[++idx]), fd, fd_idx, 1); 
+			result = insert_fd(&(argv[++idx]), fd, fd_idx, 1);
 		else if (ft_strcmp(argv[idx], "<") == 0)
 			result = insert_fd(&(argv[++idx]), fd, fd_idx, 2);
 		if (result != 0)

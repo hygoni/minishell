@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:36:16 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 16:43:28 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 14:21:08 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		get_strarr_size(char **arr)
 int		get_strarr_size3(char ***arr)
 {
 	int		len;
-	
+
 	len = 0;
 	while (arr[len] != 0)
 		len++;

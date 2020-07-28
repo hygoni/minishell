@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 11:37:17 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 14:29:39 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		write_fd(int write_fd)
 	char	c;
 
 	if ((read_fd = open(".tmp", O_RDONLY)) < 0)
-		return (1); 
+		return (1);
 	while (read(read_fd, &c, 1) > 0)
 		write(write_fd, &c, 1);
 	close(read_fd);
