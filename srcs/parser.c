@@ -142,7 +142,11 @@ char	**ft_proc_quote_path(char *arg, char ***env)
 			i++;
 			tmp = ft_strdup("");
 			while (arg[i] != '"' && arg[i] !='\0')
+			{
+				if (arg[i] == '\\')
+					i++;
 				tmp = ft_strjoinc(tmp, arg[i++]);
+			}
 			if (arg[i] == '"')
 				i++;
 			to_free = str;
@@ -177,7 +181,11 @@ char	**ft_proc_quote_path(char *arg, char ***env)
 		{
 			tmp = ft_strdup("");
 			while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' ' && arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
+			{	
+				if (arg[i] == '\\')
+					i++;
 				tmp = ft_strjoinc(tmp, arg[i++]);
+			}
 			to_free = str;
 			str = ft_strjoin(str, parse_path(tmp, env));
 			free(to_free);
