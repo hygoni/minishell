@@ -13,6 +13,7 @@
 #include "libft.h"
 #include "execute_command.h"
 #include "free.h"
+#include "ft_environ.h"
 #include <stdlib.h>
 
 char	*ft_strjoinc(char *str, char c)
@@ -73,12 +74,13 @@ char	**extend_argv(char **argv, char *str)
 	return (new);
 }
 
-char	*parse_path(char *arg)
+char	*parse_path(char *arg, char ***env)
 {
-	int		i;
+	int	i;
 	char	*parsed;
 	char	*token;
 	char	*to_free;
+	char	*key;
 
 	parsed = ft_strdup("");
 	i = 0;
@@ -87,9 +89,11 @@ char	*parse_path(char *arg)
 		if (arg[i] == '$')
 		{
 			i++;
-			token = ft_strdup("");
+			key = ft_strdup("");
 			while (arg[i] != '$' && arg[i] != '\0')
-				token = ft_strjoinc(token, arg[i++]);
+				key = ft_strjoinc(key, arg[i++]);
+			token = get_env_value(*env, key);
+			token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
 		}
 		else
 		{
@@ -106,7 +110,7 @@ char	*parse_path(char *arg)
 	return (parsed);
 }
 
-char	**ft_proc_quote_path(char *arg)
+char	**ft_proc_quote_path(char *arg, char ***env)
 {
 	char	*str;
 	int		i;
@@ -142,7 +146,7 @@ char	**ft_proc_quote_path(char *arg)
 			if (arg[i] == '"')
 				i++;
 			to_free = str;
-			str = ft_strjoin(str, parse_path(tmp));
+			str = ft_strjoin(str, parse_path(tmp, env));
 			free(to_free);
 		}
 		else if (arg[i] == ' ')
@@ -175,7 +179,7 @@ char	**ft_proc_quote_path(char *arg)
 			while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' ' && arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
 				tmp = ft_strjoinc(tmp, arg[i++]);
 			to_free = str;
-			str = ft_strjoin(str, parse_path(tmp));
+			str = ft_strjoin(str, parse_path(tmp, env));
 			free(to_free);
 		}
 		if (arg[i] == '\0')
@@ -241,7 +245,7 @@ void	parse_commands(char *cmd_line, char ***env)
 	int	len;
 
 	len = 0;
-	argv = ft_proc_quote_path(cmd_line); 
+	argv = ft_proc_quote_path(cmd_line, env); 
 	end = find(argv, ";");
 	start = 0;
 	while (argv[len] != NULL)
