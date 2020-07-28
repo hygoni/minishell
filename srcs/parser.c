@@ -16,6 +16,8 @@
 #include "ft_environ.h"
 #include <stdlib.h>
 
+extern int g_status;
+
 char	*ft_strjoinc(char *str, char c)
 {
 	int		len;
@@ -93,7 +95,10 @@ char	*parse_path(char *arg, char ***env)
 			while (arg[i] != '$' && arg[i] != '\0')
 				key = ft_strjoinc(key, arg[i++]);
 			token = get_env_value(*env, key);
-			token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
+			if (ft_strcmp(key, "?") == 0)
+				token = ft_itoa(g_status);
+			else
+				token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
 		}
 		else
 		{
