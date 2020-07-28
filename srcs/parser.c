@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/28 21:08:24 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/28 21:59:08 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,30 +76,38 @@ char	**extend_argv(char **argv, char *str)
 	return (new);
 }
 
+void	parse_path_sub(int *idx, char *arg, char ***env)
+{
+	int		i;
+	char	*token;
+	char	*key;
+
+	i = *idx;
+	i++;
+	key = ft_strdup("");
+	while (arg[i] != '$' && arg[i] != '\0')
+		key = ft_strjoinc(key, arg[i++]);
+	token = get_env_value(*env, key);
+	if (ft_strcmp(key, "?") == 0)
+		token = ft_itoa(g_status);
+	else
+		token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
+	*idx = i;
+}
+
 char	*parse_path(char *arg, char ***env)
 {
 	int		i;
 	char	*parsed;
 	char	*token;
 	char	*to_free;
-	char	*key;
 
 	parsed = ft_strdup("");
 	i = 0;
 	while (arg[i] != '\0')
 	{
 		if (arg[i] == '$')
-		{
-			i++;
-			key = ft_strdup("");
-			while (arg[i] != '$' && arg[i] != '\0')
-				key = ft_strjoinc(key, arg[i++]);
-			token = get_env_value(*env, key);
-			if (ft_strcmp(key, "?") == 0)
-				token = ft_itoa(g_status);
-			else
-				token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
-		}
+			parse_path_sub(&i, arg, env);
 		else
 		{
 			token = ft_strdup("");
@@ -224,14 +232,13 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env)
 	return (str);
 }
 
-char	**ft_proc_quote_path(char *arg, char ***env)
+char	**proc_quote_path(char *arg, char ***env)
 {
 	char	*str;
 	int		i;
 	char	**argv;
 
-	argv = malloc(sizeof(char*));
-	argv[0] = NULL;
+	argv = ft_calloc(sizeof(char*), 1);
 	str = ft_strdup("");
 	i = 0;
 	while (arg[i] != '\0')
@@ -278,23 +285,18 @@ void	parse_pipes(char **argv2, char ***env)
 	len = 0;
 	while (argv2[len] != NULL)
 		len++;
-	argv3 = (char***)malloc(sizeof(char**));
-	argv3[0] = NULL;
-	add = (char**)malloc(sizeof(char*));
-	add[0] = NULL;
+	argv3 = (char***)ft_calloc(sizeof(char**), 1);
+	add = (char**)ft_calloc(sizeof(char*), 1);
 	i = 0;
 	while (i < len)
 	{
 		if (!ft_strcmp(argv2[i], "|"))
 		{
 			argv3 = extend_argv_3d(argv3, add);
-			add = (char**)malloc(sizeof(char*));
-			add[0] = NULL;
+			add = (char**)ft_calloc(sizeof(char*), 1);
 		}
 		else
-		{
 			add = extend_argv(add, ft_strdup(argv2[i]));
-		}
 		i++;
 	}
 	argv3 = extend_argv_3d(argv3, add);
@@ -310,7 +312,7 @@ void	parse_commands(char *cmd_line, char ***env)
 	int		len;
 
 	len = 0;
-	argv = ft_proc_quote_path(cmd_line, env);
+	argv = proc_quote_path(cmd_line, env);
 	end = find(argv, ";");
 	start = 0;
 	while (argv[len] != NULL)
