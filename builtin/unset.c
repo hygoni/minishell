@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/13 22:02:25 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 20:50:57 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 20:44:55 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "ft_environ.h"
 #include "error.h"
 #include <stdio.h>
+
+#define INVALID_ID "not a valid identifier"
 
 int			check_validate(char *str)
 {
@@ -56,7 +58,7 @@ void		env_arr_move(char **env, int idx, int len)
 	}
 }
 
-int		ft_unset(int argc, char **argv, char ***env)
+int			ft_unset(int argc, char **argv, char ***env)
 {
 	int		idx;
 	int		remove_idx;
@@ -79,7 +81,7 @@ int		ft_unset(int argc, char **argv, char ***env)
 			}
 		}
 		else
-			return (error_msg_param(argv[0], "not a valid identifier", argv[idx]));
+			return (error_msg_param(argv[0], INVALID_ID, argv[idx]));
 		idx++;
 	}
 	return (EXIT_SUCCESS);

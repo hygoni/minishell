@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 21:07:29 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 20:45:44 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "ft_environ.h"
 #include "libft.h"
 #include "error.h"
+
+#define INVALID_MSG "not valid in this context"
 
 int			check_key_value(char *str)
 {
@@ -53,7 +55,7 @@ int			set_value(char *str, char **value)
 	return (1);
 }
 
-int		ft_export(int argc, char **argv, char ***env)
+int			ft_export(int argc, char **argv, char ***env)
 {
 	int		idx;
 	char	*key;
@@ -71,7 +73,7 @@ int		ft_export(int argc, char **argv, char ***env)
 			set_key(argv[idx], &key);
 			set_value(argv[idx], &value);
 			if (check_validate(key) == 0)
-				return (error_msg_param(argv[0], "not valid in this context", key));
+				return (error_msg_param(argv[0], INVALID_MSG, key));
 			else if (check_key(env, key, value) == 0)
 				return (error_msg(argv[0], "error"));
 		}

@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/11 15:26:13 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/15 20:54:04 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 20:43:40 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	cd_sub(char *buf, char *path)
 	struct stat		statbuf;
 	char			*slash;
 
-	if (lstat(path, &statbuf) == 0) {
+	if (lstat(path, &statbuf) == 0)
+	{
 		ft_strlcpy(buf, path, PATH_MAX);
 	}
 	else
