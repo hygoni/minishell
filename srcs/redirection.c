@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 13:04:32 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/28 14:17:15 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int		insert_fd(char **argv, int	**fd, int *fd_idx, int type)
 	int		idx;
 
 	idx = (type == 2) ? 0 : 1;
-	if (check_redir(argv) == 1)
+	if (check_redir(*argv) == 1)
 	{
 		if (type == 0)
 			fd[idx][fd_idx[idx]] = open(*argv, O_WRONLY | O_CREAT | O_TRUNC, 0644);
