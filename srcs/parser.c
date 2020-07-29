@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/29 19:36:58 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/29 19:41:08 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ char	*proc_space(int *idx, char *arg, char *str, char ***argv)
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
+	else
+		free(str);
 	str = ft_strdup("");
 	while (arg[i] == ' ')
 		i++;
@@ -193,6 +195,8 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
+	else
+		free(str);
 	*argv = extend_argv(*argv, ft_strdup(";"));
 	str = ft_strdup("");
 	i++;
@@ -207,6 +211,8 @@ char	*proc_bar(int *idx, char *str, char ***argv)
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
+	else
+		free(str);
 	*argv = extend_argv(*argv, ft_strdup("|"));
 	str = ft_strdup("");
 	i++;
