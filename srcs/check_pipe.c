@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 21:30:03 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:13:45 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 extern pid_t	g_child;
 
-int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
+int		init_redir_input(int len, int **fd_arr, int *tmp, int *fd)
 {
 	int		arr_idx;
 	char	c;
@@ -32,16 +32,17 @@ int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
 		while (read(fd[0], &c, 1) > 0)
 			write(tmp[0], &c, 1);
 	}
-	while (fd_input[arr_idx] != 0)
-		read_write_fd(fd_input[arr_idx++], tmp[0]);
+	while ((fd_arr[0])[arr_idx] != 0)
+		read_write_fd((fd_arr[0])[arr_idx++], tmp[0]);
 	close(tmp[0]);
 	tmp[0] = open(".input", O_RDONLY);
 	if (len > 1)
 		close(fd[0]);
-	if (len > 1 || fd_input[0] != 0)
+	if (len > 1 || (fd_arr[0])[0] != 0)
 		dup2(tmp[0], 0);
 	tmp[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(tmp[1], 1);
+	if (len == 0 || ((fd_arr[1])[0] != 0))
+		dup2(tmp[1], 1);
 	return (0);
 }
 
@@ -106,7 +107,7 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 				get_redir(argv[len - 1], &(fd_arr[0]), &(fd_arr[1]))) != 0)
 		return (1);
 	new_argv = remove_redirection(argv[len - 1]);
-	init_redir_input(len, fd_arr[0], tmp, fd);
+	init_redir_input(len, fd_arr, tmp, fd);
 	execute_command(new_argv, env);
 	if (len == 1 && fd_arr[0][0] != 0)
 		close(tmp[0]);
