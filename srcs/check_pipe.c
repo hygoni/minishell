@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 20:38:55 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 21:30:03 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
 	tmp[0] = open(".input", O_RDONLY);
 	if (len > 1)
 		close(fd[0]);
-	if (fd_input[0] != 0)
+	if (len > 1 || fd_input[0] != 0)
 		dup2(tmp[0], 0);
 	tmp[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(tmp[1], 1);
@@ -108,10 +108,10 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	new_argv = remove_redirection(argv[len - 1]);
 	init_redir_input(len, fd_arr[0], tmp, fd);
 	execute_command(new_argv, env);
-	close(tmp[1]);
-	init_redir_output(1, fd_arr[1], origin);
 	if (len == 1 && fd_arr[0][0] != 0)
 		close(tmp[0]);
+	close(tmp[1]);
+	init_redir_output(1, fd_arr[1], origin);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	clean_arg(0, 0, &new_argv, 0);
 	return (0);
