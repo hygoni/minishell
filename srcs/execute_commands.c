@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 14:46:27 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 16:41:37 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,6 @@
 #include "redirection.h"
 
 extern int g_status;
-
-char	**remove_redirection(char **argv)
-{
-	char	**removed;
-	int		i;
-
-	removed = (char**)malloc(sizeof(char*));
-	removed[0] = NULL;
-	i = 0;
-	while (argv[i] != NULL)
-	{
-		if (!ft_strcmp(argv[i], "<") || !ft_strcmp(argv[i], ">") ||
-				!ft_strcmp(argv[i], ">>"))
-			i++;
-		else
-		{
-			removed = extend_argv(removed, ft_strdup(argv[i]));
-		}
-		i++;
-	}
-	return (removed);
-}
 
 int		write_fd(int write_fd)
 {
