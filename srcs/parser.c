@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/29 19:12:22 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/29 19:36:58 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ char	*proc_double_quote(int *idx, char *arg, char *str, char ***env)
 	int		i;
 	char	*tmp;
 	char	*to_free;
+	char	*parsed;
 
 	i = *idx;
 	i++;
@@ -163,8 +164,10 @@ char	*proc_double_quote(int *idx, char *arg, char *str, char ***env)
 	if (arg[i] == '"')
 		i++;
 	to_free = str;
-	str = ft_strjoin(str, parse_path(tmp, env));
+	parsed = parse_path(tmp, env);
+	str = ft_strjoin(str, parsed);
 	free(to_free);
+	free(parsed);
 	*idx = i;
 	return (str);
 }
@@ -216,6 +219,7 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env)
 	int		i;
 	char	*tmp;
 	char	*to_free;
+	char	*parsed;
 
 	i = *idx;
 	tmp = ft_strdup("");
@@ -227,8 +231,10 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env)
 		tmp = ft_strjoinc(tmp, arg[i++]);
 	}
 	to_free = str;
-	str = ft_strjoin(str, parse_path(tmp, env));
+	parsed = parse_path(tmp, env);
+	str = ft_strjoin(str, parsed);
 	free(to_free);
+	free(parsed);
 	*idx = i;
 	return (str);
 }
@@ -321,7 +327,10 @@ void	parse_commands(char *cmd_line, char ***env)
 	while (end >= 0 && start < len)
 	{
 		if (argv[end] != NULL)
+		{
 			free(argv[end]);
+			argv[end] = NULL;
+		}
 		argv[end] = NULL;
 		parse_pipes(&argv[start], env);
 		start = end + 1;
@@ -331,4 +340,5 @@ void	parse_commands(char *cmd_line, char ***env)
 	}
 	if (argv[start] != NULL && ft_strcmp(argv[start], ";") != 0)
 		parse_pipes(&argv[start], env);
+	free_2d_len(argv, len);
 }
