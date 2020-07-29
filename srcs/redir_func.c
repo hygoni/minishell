@@ -6,10 +6,9 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 16:39:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 17:05:02 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 20:35:06 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -31,7 +30,6 @@ char	**remove_redirection(char **argv)
 	while (argv[i] != NULL)
 	{
 		if (!ft_strcmp(argv[i], "<") || !ft_strcmp(argv[i], ">") ||
-
 				!ft_strcmp(argv[i], ">>"))
 			i++;
 		else
@@ -51,7 +49,6 @@ int		check_redir(char *next)
 			return (0);
 		else if (ft_strcmp(next, ">") == 0)
 			return (0);
-
 		else
 			return (1);
 	}
@@ -70,7 +67,6 @@ int		clear_redir_fd(int *fd_input, int *fd_out)
 int		clear_redir(int *arr, int end, char **err_file, int error)
 {
 	int		idx;
-
 
 	idx = 0;
 	while (idx < end)
