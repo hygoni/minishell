@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/29 19:41:08 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/29 19:53:36 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ char	*parse_path_sub(int *idx, char *arg, char ***env)
 	else
 		token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
 	*idx = i;
+	free(key);
 	return (token);
 }
 
@@ -325,6 +326,8 @@ void	parse_commands(char *cmd_line, char ***env)
 	int		len;
 
 	len = 0;
+	if (ft_strlen(cmd_line) == 0)
+		return ;
 	argv = proc_quote_path(cmd_line, env);
 	end = find(argv, ";");
 	start = 0;
