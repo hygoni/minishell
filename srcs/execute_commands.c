@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 16:41:37 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 20:38:12 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "redirection.h"
 
 extern int g_status;
+extern pid_t	g_child;
 
 int		write_fd(int write_fd)
 {
@@ -46,13 +47,11 @@ int		read_write_fd(int read_fd, int write_fd)
 
 int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 {
-	pid_t	child;
-
 	if (idx != 0)
 	{
 		pipe(child_fd);
-		child = fork();
-		if (child == 0)
+		g_child = fork();
+		if (g_child == 0)
 			execute_pipe(idx - 1, child_fd, argv, env);
 		else
 			wait(&g_status);

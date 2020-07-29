@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 20:33:30 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 20:38:55 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "execute_command.h"
 #include "ft_environ.h"
 #include "redirection.h"
+
+extern pid_t	g_child;
 
 int		init_redir_input(int len, int *fd_input, int *tmp, int *fd)
 {
@@ -73,13 +75,12 @@ int		init_redir_output(int type, int *fd_out, int *origin)
 
 int		pipe_command(char ***argv, char ***env, int len, int *fd)
 {
-	pid_t	child;
 	int		status;
 
 	pipe(fd);
 	dup2(fd[0], 0);
-	child = fork();
-	if (child == 0)
+	g_child = fork();
+	if (g_child == 0)
 	{
 		execute_pipe(len - 2, fd, argv, env);
 		exit(0);
