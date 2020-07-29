@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 11:35:39 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 15:46:20 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,12 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 {
 	int		check_redir;
 	int		origin[2];
-	int		**fd_arr;
+	int		*fd_arr[2];
 	char	**new_argv;
 	int		tmp[2];
 
 	origin[0] = dup(0);
 	origin[1] = dup(1);
-	fd_arr = (int **)malloc(sizeof(int *) * 2);
 	if (len > 1)
 		pipe_command(argv, env, len, fd);
 	if ((check_redir =
@@ -111,5 +110,7 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 		close(tmp[0]);
 	close(tmp[1]);
 	init_redir_output(1, fd_arr[1], origin);
+	clear_redir_fd(fd_arr[0], fd_arr[1]);
+	clean_arg(0, 0, &new_argv, 0);
 	return (0);
 }

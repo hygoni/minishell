@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 14:29:39 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 14:46:27 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,9 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 {
 	char	**new_argv;
 	int		child_fd[2];
-	int		**fd_arr;
+	int		*fd_arr[2];
 	int		tmp[2];
 
-	fd_arr = (int **)malloc(sizeof(int *) * 2);
 	pipe_recursive(idx, child_fd, argv, env);
 	if ((g_status = get_redir(argv[idx], &(fd_arr[0]), &(fd_arr[1]))) != 0)
 		exit(g_status);
@@ -107,6 +106,7 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 		close(tmp[1]);
 	init_redir_output(0, fd_arr[1], fd);
 	clean_arg(0, 0, &new_argv, 0);
+	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	exit(0);
 }
 

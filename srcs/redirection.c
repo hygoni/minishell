@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:45:17 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 14:27:46 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/29 14:44:07 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ int		check_redir(char *next)
 		else
 			return (1);
 	}
+	return (0);
+}
+
+int		clear_redir_fd(int	*fd_input, int *fd_output)
+{
+	if (fd_input != 0)
+		free(fd_input);
+	if (fd_output != 0)
+		free(fd_output);
 	return (0);
 }
 
