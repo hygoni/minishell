@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/28 21:59:08 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/29 19:12:22 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	**extend_argv(char **argv, char *str)
 	return (new);
 }
 
-void	parse_path_sub(int *idx, char *arg, char ***env)
+char	*parse_path_sub(int *idx, char *arg, char ***env)
 {
 	int		i;
 	char	*token;
@@ -93,6 +93,7 @@ void	parse_path_sub(int *idx, char *arg, char ***env)
 	else
 		token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
 	*idx = i;
+	return (token);
 }
 
 char	*parse_path(char *arg, char ***env)
@@ -107,7 +108,7 @@ char	*parse_path(char *arg, char ***env)
 	while (arg[i] != '\0')
 	{
 		if (arg[i] == '$')
-			parse_path_sub(&i, arg, env);
+			token = parse_path_sub(&i, arg, env);
 		else
 		{
 			token = ft_strdup("");
