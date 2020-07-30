@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 18:31:21 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/15 21:08:00 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/30 14:51:00 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,17 @@ int		change_env_value(char *key, char *value, char **env)
 int		check_key(char ***env, char *key, char *value)
 {
 	int		equal;
+	int		len;
 	char	**env_ptr;
 
 	env_ptr = *env;
 	if (key != 0 && *key != 0 && value != 0)
 	{
+		len = ft_strlen(key);
 		while (*env_ptr != 0)
 		{
 			equal = get_equal_idx(*env_ptr);
+			equal = equal > len ? equal : len;
 			if (ft_strncmp(*env_ptr, key, equal) == 0)
 				return (change_env_value(key, value, env_ptr));
 			env_ptr++;
