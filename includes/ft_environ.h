@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:30:41 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/26 16:43:49 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/30 17:46:20 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ int		get_strarr_size3(char ***arr);
 void	clean_arg(char **key, char **value, char ***arg, char ***env);
 char	**realloc_env(char **env, int size);
 int		check_key(char ***env, char *key, char *value);
-int	ft_export(int argc, char **argv, char ***env);
-int	ft_unset(int argc, char **argv, char ***env);
-int	ft_env(char **env);
+int		ft_export(int argc, char **argv, char ***env);
+int		ft_unset(int argc, char **argv, char ***env);
+int		ft_env(char **env);
 int		check_validate(char *str);
 void	ft_export_one(char *key, char *value, char **env);
 

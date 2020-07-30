@@ -6,12 +6,13 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 11:41:38 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 23:06:17 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/30 17:45:42 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REDIRECTION_H
 # define REDIRECTION_H
+
 char	**remove_redirection(char **argv);
 int		check_redir(char *next);
 int		clear_redir(int *arr, int end, char **err_file, int error);
