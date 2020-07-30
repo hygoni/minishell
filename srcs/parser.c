@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/30 17:07:13 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/30 20:04:51 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ char	*proc_single_quote(int *idx, char *arg, char *str)
 		return (NULL);
 	free(to_free);
 	free(tmp);
-	*idx = i;
 	if (arg[i] == '\'')
 		i++;
 	else
@@ -157,6 +156,7 @@ char	*proc_single_quote(int *idx, char *arg, char *str)
 		error_msg(EXE_NAME, MSG_SINGLE_QUOTE_NOT_CLOSED);
 		return (NULL);
 	}
+	*idx = i;
 	return (str);
 }
 
