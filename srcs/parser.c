@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 10:32:05 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/29 19:57:24 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/07/30 17:07:13 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,13 @@
 #include "execute_command.h"
 #include "free.h"
 #include "ft_environ.h"
+#include "builtin.h"
+#include "error.h"
+#include "escape.h"
 #include <stdlib.h>
+#define EXE_NAME "minishell"
+#define MSG_DOUBLE_QUOTE_NOT_CLOSED "double quote isn't closed"
+#define MSG_SINGLE_QUOTE_NOT_CLOSED "single quote isn't closed"
 
 extern int g_status;
 
@@ -133,16 +139,24 @@ char	*proc_single_quote(int *idx, char *arg, char *str)
 
 	i = *idx;
 	i++;
-	tmp = ft_strdup("");
+	if ((tmp = ft_strdup("")) == NULL)
+		return (NULL);
 	while (arg[i] != '\'' && arg[i] != '\0')
-		tmp = ft_strjoinc(tmp, arg[i++]);
-	if (arg[i] == '\'')
-		i++;
+		if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
+			return (NULL);
 	to_free = str;
-	str = ft_strjoin(str, tmp);
+	if ((str = ft_strjoin(str, tmp)) == NULL)
+		return (NULL);
 	free(to_free);
 	free(tmp);
 	*idx = i;
+	if (arg[i] == '\'')
+		i++;
+	else
+	{
+		error_msg(EXE_NAME, MSG_SINGLE_QUOTE_NOT_CLOSED);
+		return (NULL);
+	}
 	return (str);
 }
 
@@ -155,18 +169,30 @@ char	*proc_double_quote(int *idx, char *arg, char *str, char ***env)
 
 	i = *idx;
 	i++;
-	tmp = ft_strdup("");
+	if ((tmp = ft_strdup("")) == NULL)
+		return (NULL);
 	while (arg[i] != '"' && arg[i] != '\0')
 	{
 		if (arg[i] == '\\')
+		{
 			i++;
-		tmp = ft_strjoinc(tmp, arg[i++]);
+			tmp = ft_strjoinc(tmp, escape(arg[i++]));
+		}
+		else
+			tmp = ft_strjoinc(tmp, arg[i++]);
 	}
 	if (arg[i] == '"')
 		i++;
+	else
+	{
+		error_msg(EXE_NAME, MSG_DOUBLE_QUOTE_NOT_CLOSED);
+		return (NULL);
+	}
 	to_free = str;
-	parsed = parse_path(tmp, env);
-	str = ft_strjoin(str, parsed);
+	if ((parsed = parse_path(tmp, env)) == NULL)
+		return (NULL);
+	if ((str = ft_strjoin(str, parsed)) == NULL)
+		return (NULL);
 	free(to_free);
 	free(parsed);
 	*idx = i;
@@ -234,8 +260,12 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env)
 			&& arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
 	{
 		if (arg[i] == '\\')
+		{
 			i++;
-		tmp = ft_strjoinc(tmp, arg[i++]);
+			tmp = ft_strjoinc(tmp, arg[i++]);
+		}
+		else
+			tmp = ft_strjoinc(tmp, arg[i++]);
 	}
 	to_free = str;
 	parsed = parse_path(tmp, env);
@@ -252,8 +282,10 @@ char	**proc_quote_path(char *arg, char ***env)
 	int		i;
 	char	**argv;
 
-	argv = ft_calloc(sizeof(char*), 1);
-	str = ft_strdup("");
+	if ((argv = ft_calloc(sizeof(char*), 1)) == NULL)
+		return (NULL);
+	if ((str = ft_strdup("")) == NULL)
+		return (NULL);
 	i = 0;
 	while (arg[i] != '\0')
 	{
@@ -269,6 +301,8 @@ char	**proc_quote_path(char *arg, char ***env)
 			str = proc_bar(&i, str, &argv);
 		else
 			str = proc_str(&i, arg, str, env);
+		if (str == NULL)
+			return (NULL);
 		if (arg[i] == '\0')
 			argv = extend_argv(argv, str);
 	}
@@ -326,10 +360,7 @@ void	parse_commands_sub(char **argv, char ***env, int end, int len)
 	while (end >= 0 && start < len)
 	{
 		if (argv[end] != NULL)
-		{
 			free(argv[end]);
-			argv[end] = NULL;
-		}
 		argv[end] = NULL;
 		parse_pipes(&argv[start], env);
 		start = end + 1;
@@ -351,7 +382,8 @@ void	parse_commands(char *cmd_line, char ***env)
 	len = 0;
 	if (ft_strlen(cmd_line) == 0)
 		return ;
-	argv = proc_quote_path(cmd_line, env);
+	else if ((argv = proc_quote_path(cmd_line, env)) == NULL)
+		return ;
 	end = find(argv, ";");
 	start = 0;
 	while (argv[len] != NULL)

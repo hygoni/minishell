@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/29 16:24:46 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/30 17:15:41 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <signal.h>
 #include "libft.h"
 #include "get_next_line.h"
 #include "ft_environ.h"
@@ -29,6 +30,8 @@
 
 extern char	**environ;
 int		g_status;
+char	*g_prompt;
+char	*g_process_name = "minishell";
 
 int		check_env_key(char *str, char *key)
 {
@@ -78,6 +81,7 @@ int		execute_command(char **argv, char ***env)
 
 	if ((command = argv[0]) == 0)
 		return (1);
+	g_process_name = command;
 	size = get_strarr_size(argv);
 	len = ft_strlen(command);
 	if (ft_strcmp(command, "echo") == 0)
@@ -96,20 +100,46 @@ int		execute_command(char **argv, char ***env)
 		g_status = ft_exit(argv[1]);
 	else
 		execute_binary(argv, *env);
+	g_process_name = EXE_NAME;
 	return (1);
+}
+
+void	sigint(int signal)
+{
+	ft_putchar(8);
+	ft_putchar(8);
+	ft_putchar('\n');
+	if (g_child != 0)
+		kill(g_child, signal);
+	error_msg_param(EXE_NAME, g_process_name, "sigint");
+	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
+		write(1, g_prompt, ft_strlen(g_prompt));	
+}
+
+void	sigquit(int signal)
+{
+	ft_putchar(8);
+	ft_putchar(8);
+	ft_putchar('\n');
+	if (g_child != 0)
+		kill(g_child, signal);
+	error_msg_param(EXE_NAME, g_process_name, "sigquit");
+	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
+		write(1, g_prompt, ft_strlen(g_prompt));	
 }
 
 int		main(void)
 {
 	char	*command;
 	char	**env;
-	char	*prompt;
 
-	if (init_main(&prompt, environ, &env) == 0)
+	signal(SIGINT, sigint);
+	signal(SIGQUIT, sigquit);
+	if (init_main(&g_prompt, environ, &env) == 0)
 		return (0);
 	while (1)
 	{
-		write(1, prompt, ft_strlen(prompt));
+		write(1, g_prompt, ft_strlen(g_prompt));
 		if (get_next_line(0, &command) == 0 && *command == 0)
 		{
 			free(command);
@@ -118,5 +148,5 @@ int		main(void)
 		parse_commands(command, &env);
 		free(command);
 	}
-	clean_arg(&prompt, 0, 0, &env);
+	clean_arg(&g_prompt, 0, 0, &env);
 }
