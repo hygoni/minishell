@@ -245,16 +245,21 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 	int		i;
 	char		*semicolon;
 
-	i = *idx;
+	i = *idx;	
+	if ((semicolon = ft_strdup(";")) == NULL)
+		return (NULL);
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
 	else
+	{
 		free(str);
-	if ((semicolon = ft_strdup(";")) == NULL)
+		free(semicolon);
+		error_msg_parse(semicolon);
+		return (NULL);
+	}
+	if ((str = ft_strdup("")) == NULL)
 		return (NULL);
 	if ((*argv = extend_argv(*argv, semicolon)) == NULL)
-		return (NULL);
-	if ((str = ft_strdup("")) == NULL)
 		return (NULL);
 	i++;
 	*idx = i;

@@ -46,7 +46,7 @@ char	*find_exec(char *name, char **environ)
 	char	*ret;
 
 	if ((path = get_env_value(environ, PATH)) == NULL
-			|| (path = ft_strdup(path)) == NULL)
+		|| ft_strlen(name) == 0 || (path = ft_strdup(path)) == NULL)
 		return (NULL);
 	token = ft_strtok(path, ":");
 	while (token != NULL)

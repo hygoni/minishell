@@ -56,7 +56,7 @@ void	execute_binary(char **argv, char **env)
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
 	{
 		g_status = 127;
-		error_msg_param(EXE_NAME, COMMAND_NOT_FOUND, argv[0]);
+		error_msg_param(EXE_NAME, argv[0], COMMAND_NOT_FOUND);
 		return ;
 	}
 	child = 1;
