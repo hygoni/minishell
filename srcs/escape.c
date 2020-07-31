@@ -18,20 +18,14 @@
 
 char escape(char c)
 {
-	if (c == 'n')
-		return ('\n');
-	else if (c == 'a')
-		return (BEEP);
-	else if (c == 'b')
-		return (BACKSPACE);
-	else if (c == 'e')
-		return (ESCAPE);
-	else if (c == 'f')
-		return ('\f');
-	else if (c == 't')
-		return ('\t');
-	else if (c == 'v')
-		return ('\v');
+	if (c == '\'')
+		return ('\'');
+	else if (c == '\\')
+		return ('\\');
+	else if (c == '"')
+		return ('"');
+	else if (c == '?')
+		return ('?');
 	else
 		return (c);
 }
