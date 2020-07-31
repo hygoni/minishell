@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/01 00:57:29 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/01 01:34:21 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		init_redir_output(int type, int *fd_out, int *tmp, int *fd)
 	{
 		if (arr_idx > 0)
 			close(fd_out[arr_idx - 1]);
-		dup2(fd_out[arr_idx++]);
+		dup2(fd_out[arr_idx++], 1);
 		tmp[1] = fd_out[arr_idx - 1];
 	}
 	return (0);
@@ -85,6 +85,8 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 
 	origin[0] = dup(0);
 	origin[1] = dup(1);
+	tmp[0] = -1;
+	tmp[1] = -1;
 	if (len > 1)
 		pipe_command(argv, env, len, fd);
 	if ((check_redir =
@@ -93,12 +95,15 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	new_argv = remove_redirection(argv[len - 1]);
 	init_redir_input(len, fd_arr, tmp, fd);
 	init_redir_output(0, fd_arr[1], tmp, fd);
+	close(fd[1]);
 	execute_command(new_argv, env);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	dup2(origin[0], 0);
 	dup2(origin[1], 1);
-	close(tmp[1]);
-	close(tmp[0]);
+	if (tmp[0] != -1)
+		close(tmp[0]);
+	if (tmp[1] != -1)
+		close(tmp[1]);
 	clean_arg(0, 0, &new_argv, 0);
 	return (0);
 }
