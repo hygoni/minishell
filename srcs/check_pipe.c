@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/31 23:26:50 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/01 00:57:29 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,57 +20,43 @@
 
 extern pid_t	g_child;
 
-int		init_redir_input(int len, int **fd_arr, int *tmp, int *fd)
+int		init_redir_input(int type, int **fd_arr, int *tmp, int *fd)
 {
 	int		arr_idx;
 
 	arr_idx = 0;
-	if (len > 1)
+	if (type > 1)
+	{
 		dup2(fd[0], 0);
-	while ((fd_arr[0])[arr_idx] != 0)
+		tmp[0] = fd[0];
+	}
+	while (fd_arr[0][arr_idx] != 0)
 	{
 		if (arr_idx > 0)
 			close(fd_arr[0][arr_idx - 1]);
 		dup2(fd_arr[0][arr_idx++], 0);
-		tmp[0] = dup2(fd_arr[0][arr_idx - 1], 1);
-	}
-	arr_idx = 0;
-	dup2(fd[1], 1);
-	while ((fd_arr[1])[arr_idx] != 0)
-	{
-		if (arr_idx > 0)
-			close(fd_arr[1][arr_idx - 1]);
-		dup2(fd_arr[1][arr_idx++], 1);
-		tmp[1] = fd_arr[1][arr_idx - 1];
+		tmp[0] = fd_arr[0][arr_idx - 1];
 	}
 	return (0);
 }
 
-int		init_redir_output(int type, int *fd_out, int *origin)
+int		init_redir_output(int type, int *fd_out, int *tmp, int *fd)
 {
 	int		arr_idx;
 
+	arr_idx = 0;
 	if (type == 1)
 	{
-		dup2(origin[0], 0);
-		close(origin[0]);
+		dup2(fd[1], 1);
+		tmp[1] = fd[1];
 	}
-	arr_idx = 0;
 	while (fd_out[arr_idx] != 0)
 	{
-		write_fd(fd_out[arr_idx]);
-		close(fd_out[arr_idx]);
-		arr_idx++;
+		if (arr_idx > 0)
+			close(fd_out[arr_idx - 1]);
+		dup2(fd_out[arr_idx++]);
+		tmp[1] = fd_out[arr_idx - 1];
 	}
-	if (type == 1)
-	{
-		dup2(origin[1], 1);
-		close(origin[1]);
-		if (fd_out[0] == 0)
-			write_fd(1);
-	}
-	else
-		write_fd(origin[1]);
 	return (0);
 }
 
@@ -106,11 +92,13 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 		return (1);
 	new_argv = remove_redirection(argv[len - 1]);
 	init_redir_input(len, fd_arr, tmp, fd);
+	init_redir_output(0, fd_arr[1], tmp, fd);
 	execute_command(new_argv, env);
-	close(tmp[1]);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	dup2(origin[0], 0);
 	dup2(origin[1], 1);
+	close(tmp[1]);
+	close(tmp[0]);
 	clean_arg(0, 0, &new_argv, 0);
 	return (0);
 }

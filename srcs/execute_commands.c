@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/31 23:10:04 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/01 00:57:31 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 	int		*fd_arr[2];
 	int		tmp[2];
 
+	dup2(fd[1], 1);
+	tmp[1] = fd[1];
 	pipe_recursive(idx, child_fd, argv, env);
 	if ((g_status = get_redir(argv[idx], &(fd_arr[0]), &(fd_arr[1]))) != 0)
 		exit(g_status);
@@ -76,12 +78,17 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 	{
 		close(child_fd[1]);
 		init_redir_input(2, fd_arr, tmp, child_fd);
+		init_redir_output(1, fd_arr[1], tmp, fd);
 	}
 	else
-		init_redir_input(0, fd_arr, child_fd, fd);
+	{
+		init_redir_input(0, fd_arr, tmp, fd);
+		init_redir_output(1, fd_arr[1], tmp, fd);
+	}
+	close(fd[0]);
 	execute_command(new_argv, env);
-	if (idx != 0 && fd_arr[1][0] != 0)
-		close(tmp[1]);
+	close(tmp[0]);
+	close(tmp[1]);
 	clean_arg(0, 0, &new_argv, 0);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	exit(0);
