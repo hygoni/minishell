@@ -91,7 +91,7 @@ char	*parse_path_sub(int *idx, char *arg, char ***env)
 	i = *idx;
 	i++;
 	key = ft_strdup("");
-	while (arg[i] != '$' && arg[i] != '\0')
+	while (arg[i] != '$' && arg[i] != '\0' && (ft_isalnum(arg[i])))
 		key = ft_strjoinc(key, arg[i++]);
 	token = get_env_value(*env, key);
 	if (ft_strcmp(key, "?") == 0)
