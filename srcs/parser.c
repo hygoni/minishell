@@ -16,7 +16,6 @@
 #include "ft_environ.h"
 #include "builtin.h"
 #include "error.h"
-#include "escape.h"
 #include <stdlib.h>
 #define EXE_NAME "minishell"
 #define MSG_DOUBLE_QUOTE_NOT_CLOSED "double quote isn't closed"
@@ -91,8 +90,20 @@ char	*parse_path_sub(int *idx, char *arg, char ***env)
 	i = *idx;
 	i++;
 	key = ft_strdup("");
-	while (arg[i] != '$' && arg[i] != '\0' && (arg[i] == '_' || ft_isalnum(arg[i])))
-		key = ft_strjoinc(key, arg[i++]);
+	if (arg[i] == '?')
+	{
+		i++;
+		if ((key = ft_strdup("?")) == NULL)
+			return (NULL);
+	}
+	else
+	{
+		while (arg[i] != '$' && arg[i] != '\0' && (arg[i] == '_' || ft_isalnum(arg[i])))
+		{	
+			if ((key = ft_strjoinc(key, arg[i++])) == NULL)
+				return (NULL);
+		}
+	}
 	token = get_env_value(*env, key);
 	if (ft_strcmp(key, "?") == 0)
 		token = ft_itoa(g_status);
@@ -142,8 +153,19 @@ char	*proc_single_quote(int *idx, char *arg, char *str)
 	if ((tmp = ft_strdup("")) == NULL)
 		return (NULL);
 	while (arg[i] != '\'' && arg[i] != '\0')
-		if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
+	{
+		if (arg[i] == '\\')
+		{
+			i++;
+			if (arg[i] != '\'' &&  arg[i] != '\\')
+				tmp = ft_strjoinc(tmp, '\\');
+			tmp = ft_strjoinc(tmp, arg[i++]);
+			if (tmp == NULL)
+				return (NULL);
+		}
+		else if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
 			return (NULL);
+	}
 	to_free = str;
 	if ((str = ft_strjoin(str, tmp)) == NULL)
 		return (NULL);
@@ -176,10 +198,13 @@ char	*proc_double_quote(int *idx, char *arg, char *str, char ***env)
 		if (arg[i] == '\\')
 		{
 			i++;
-			tmp = ft_strjoinc(tmp, escape(arg[i++]));
+			if (arg[i] != '\"' && arg[i] != '\\')
+				tmp = ft_strjoinc(tmp, '\\');
+			if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
+				return (NULL);
 		}
-		else
-			tmp = ft_strjoinc(tmp, arg[i++]);
+		else if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
+			return (NULL);
 	}
 	if (arg[i] == '"')
 		i++;
@@ -218,14 +243,19 @@ char	*proc_space(int *idx, char *arg, char *str, char ***argv)
 char	*proc_semicolon(int *idx, char *str, char ***argv)
 {
 	int		i;
+	char		*semicolon;
 
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
-	*argv = extend_argv(*argv, ft_strdup(";"));
-	str = ft_strdup("");
+	if ((semicolon = ft_strdup(";")) == NULL)
+		return (NULL);
+	if ((*argv = extend_argv(*argv, semicolon)) == NULL)
+		return (NULL);
+	if ((str = ft_strdup("")) == NULL)
+		return (NULL);
 	i++;
 	*idx = i;
 	return (str);
@@ -234,14 +264,19 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 char	*proc_bar(int *idx, char *str, char ***argv)
 {
 	int		i;
+	char		*bar;
 
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
-	*argv = extend_argv(*argv, ft_strdup("|"));
-	str = ft_strdup("");
+	if ((bar = ft_strdup("|")) == NULL)
+		return (NULL);
+	if ((*argv = extend_argv(*argv, bar)) == NULL)
+		return (NULL);
+	if ((str = ft_strdup("")) == NULL)
+		return (NULL);
 	i++;
 	*idx = i;
 	return (str);
@@ -255,23 +290,27 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env)
 	char	*parsed;
 
 	i = *idx;
-	tmp = ft_strdup("");
+	if ((tmp = ft_strdup("")) == NULL)
+		return (NULL);
 	while (arg[i] != '|' && arg[i] != ';' && arg[i] != ' '
 			&& arg[i] != '\'' && arg[i] != '"' && arg[i] != '\0')
 	{
 		if (arg[i] == '\\')
-		{
 			i++;
-			tmp = ft_strjoinc(tmp, arg[i++]);
-		}
-		else
-			tmp = ft_strjoinc(tmp, arg[i++]);
+		if ((tmp = ft_strjoinc(tmp, arg[i++])) == NULL)
+			return (NULL);
 	}
 	to_free = str;
-	parsed = parse_path(tmp, env);
+	if ((parsed = parse_path(tmp, env)) == NULL)
+	{
+		free(to_free);
+		return (NULL);
+	}
 	str = ft_strjoin(str, parsed);
 	free(to_free);
 	free(parsed);
+	if (str == NULL)
+		return (NULL);
 	*idx = i;
 	return (str);
 }
