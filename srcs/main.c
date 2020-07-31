@@ -30,6 +30,7 @@
 
 extern char	**environ;
 int		g_status;
+int		g_interrupted = 0;
 char	*g_prompt;
 char	*g_process_name = "minishell";
 
@@ -50,9 +51,11 @@ void	execute_binary(char **argv, char **env)
 	pid_t	child;
 	pid_t	pid;
 	char	*exe_path;
+	int		status;
 
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
 	{
+		g_status = 127;
 		error_msg_param(EXE_NAME, COMMAND_NOT_FOUND, argv[0]);
 		return ;
 	}
@@ -60,7 +63,11 @@ void	execute_binary(char **argv, char **env)
 	if (child != 0)
 	{
 		child = fork();
-		pid = wait(&g_status);
+		pid = wait(&status);
+		if (g_interrupted == 0)
+			g_status = status;
+		else
+			g_interrupted = 0;
 		free(exe_path);
 	}
 	if (child == 0)
@@ -106,6 +113,8 @@ int		execute_command(char **argv, char ***env)
 
 void	sigint(int signal)
 {
+	g_interrupted = 1;
+	g_status = 130;
 	ft_putchar(8);
 	ft_putchar(8);
 	ft_putchar('\n');
@@ -118,6 +127,8 @@ void	sigint(int signal)
 
 void	sigquit(int signal)
 {
+	g_interrupted = 1;
+	g_status = 131;
 	ft_putchar(8);
 	ft_putchar(8);
 	ft_putchar('\n');

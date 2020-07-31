@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include "libft.h"
+#include "error.h"
 
 extern int g_status;
 
