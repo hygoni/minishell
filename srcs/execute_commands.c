@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 23:06:52 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/31 23:10:04 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,10 @@ int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 		g_child = fork();
 		if (g_child == 0)
 			execute_pipe(idx - 1, child_fd, argv, env);
+		/*
 		else
 			wait(&g_status);
+			*/
 	}
 	return (0);
 }
@@ -74,14 +76,12 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 	{
 		close(child_fd[1]);
 		init_redir_input(2, fd_arr, tmp, child_fd);
-		close(fd[0]);
 	}
 	else
 		init_redir_input(0, fd_arr, child_fd, fd);
 	execute_command(new_argv, env);
-	if (idx != 0)
+	if (idx != 0 && fd_arr[1][0] != 0)
 		close(tmp[1]);
-	init_redir_output(0, fd_arr[1], fd);
 	clean_arg(0, 0, &new_argv, 0);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	exit(0);

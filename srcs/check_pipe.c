@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/29 23:13:45 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/07/31 23:26:50 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,26 @@ extern pid_t	g_child;
 int		init_redir_input(int len, int **fd_arr, int *tmp, int *fd)
 {
 	int		arr_idx;
-	char	c;
 
 	arr_idx = 0;
-	tmp[0] = open(".input", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (len > 1)
-	{
-		while (read(fd[0], &c, 1) > 0)
-			write(tmp[0], &c, 1);
-	}
+		dup2(fd[0], 0);
 	while ((fd_arr[0])[arr_idx] != 0)
-		read_write_fd((fd_arr[0])[arr_idx++], tmp[0]);
-	close(tmp[0]);
-	tmp[0] = open(".input", O_RDONLY);
-	if (len > 1)
-		close(fd[0]);
-	if (len > 1 || (fd_arr[0])[0] != 0)
-		dup2(tmp[0], 0);
-	tmp[1] = open(".tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (len == 0 || ((fd_arr[1])[0] != 0))
-		dup2(tmp[1], 1);
+	{
+		if (arr_idx > 0)
+			close(fd_arr[0][arr_idx - 1]);
+		dup2(fd_arr[0][arr_idx++], 0);
+		tmp[0] = dup2(fd_arr[0][arr_idx - 1], 1);
+	}
+	arr_idx = 0;
+	dup2(fd[1], 1);
+	while ((fd_arr[1])[arr_idx] != 0)
+	{
+		if (arr_idx > 0)
+			close(fd_arr[1][arr_idx - 1]);
+		dup2(fd_arr[1][arr_idx++], 1);
+		tmp[1] = fd_arr[1][arr_idx - 1];
+	}
 	return (0);
 }
 
@@ -76,17 +76,15 @@ int		init_redir_output(int type, int *fd_out, int *origin)
 
 int		pipe_command(char ***argv, char ***env, int len, int *fd)
 {
-	int		status;
-
 	pipe(fd);
-	dup2(fd[0], 0);
+	//dup2(fd[0], 0);
 	g_child = fork();
 	if (g_child == 0)
 	{
 		execute_pipe(len - 2, fd, argv, env);
 		exit(0);
 	}
-	wait(&status);
+//	wait(&status);
 	close(fd[1]);
 	return (0);
 }
@@ -109,11 +107,10 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	new_argv = remove_redirection(argv[len - 1]);
 	init_redir_input(len, fd_arr, tmp, fd);
 	execute_command(new_argv, env);
-	if (len == 1 && fd_arr[0][0] != 0)
-		close(tmp[0]);
 	close(tmp[1]);
-	init_redir_output(1, fd_arr[1], origin);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
+	dup2(origin[0], 0);
+	dup2(origin[1], 1);
 	clean_arg(0, 0, &new_argv, 0);
 	return (0);
 }
