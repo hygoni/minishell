@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/01 01:34:21 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/01 09:45:39 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "redirection.h"
 
 extern pid_t	g_child;
+extern int		g_status;
 
 int		init_redir_input(int type, int **fd_arr, int *tmp, int *fd)
 {
@@ -105,5 +106,6 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	if (tmp[1] != -1)
 		close(tmp[1]);
 	clean_arg(0, 0, &new_argv, 0);
+	wait(&g_status);
 	return (0);
 }

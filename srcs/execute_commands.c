@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/01 01:28:30 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/01 09:44:36 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 	execute_command(new_argv, env);
 	clean_arg(0, 0, &new_argv, 0);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
-	printf("pipe end\n");
+	wait(&g_status);
 	exit(0);
 }
 
