@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/31 23:25:33 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/02 15:02:19 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@
 #include "minishell.h"
 #include "execute_command.h"
 #include "parser.h"
+#include "signals.h"
 
 #define EXE_NAME	"minishell"
 #define COMMAND_NOT_FOUND	"command not found"
 
-extern char	**environ;
+pid_t	g_child;
 int		g_status;
 int		g_interrupted = 0;
 char	*g_prompt;
@@ -46,24 +47,32 @@ int		check_env_key(char *str, char *key)
 	return (1);
 }
 
-void	execute_binary(char **argv, char **env)
+char	*execute_binary_sub(char **argv, char **env)
 {
-	pid_t	child;
-	pid_t	pid;
 	char	*exe_path;
-	int		status;
 
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
 	{
 		g_status = 127;
 		error_msg_param(EXE_NAME, argv[0], COMMAND_NOT_FOUND);
-		return ;
+		return (NULL);
 	}
+	return (exe_path);
+}
+
+void	execute_binary(char **argv, char **env)
+{
+	pid_t	child;
+	char	*exe_path;
+	int		status;
+
+	if ((exe_path = execute_binary_sub(argv, env)) == NULL)
+		return ;
 	child = 1;
 	if (child != 0)
 	{
 		child = fork();
-		pid = wait(&status);
+		g_child = wait(&status);
 		if (g_interrupted == 0)
 			g_status = status;
 		else
@@ -83,14 +92,12 @@ void	execute_binary(char **argv, char **env)
 int		execute_command(char **argv, char ***env)
 {
 	char	*command;
-	int		len;
 	int		size;
 
 	if ((command = argv[0]) == 0)
 		return (1);
 	g_process_name = command;
 	size = get_strarr_size(argv);
-	len = ft_strlen(command);
 	if (ft_strcmp(command, "echo") == 0)
 		g_status = ft_echo(size, argv);
 	else if (ft_strcmp(command, "cd") == 0)
@@ -111,39 +118,13 @@ int		execute_command(char **argv, char ***env)
 	return (1);
 }
 
-void	sigint(int signal)
-{
-	g_interrupted = 1;
-	g_status = 130;
-	ft_putchar(8);
-	ft_putchar(8);
-	ft_putchar('\n');
-	if (g_child != 0)
-		kill(g_child, signal);
-	error_msg_param(EXE_NAME, g_process_name, "sigint");
-	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
-		write(1, g_prompt, ft_strlen(g_prompt));	
-}
-
-void	sigquit(int signal)
-{
-	g_interrupted = 1;
-	g_status = 131;
-	ft_putchar(8);
-	ft_putchar(8);
-	ft_putchar('\n');
-	if (g_child != 0)
-		kill(g_child, signal);
-	error_msg_param(EXE_NAME, g_process_name, "sigquit");
-	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
-		write(1, g_prompt, ft_strlen(g_prompt));	
-}
-
-int		main(void)
+int		main(int argc, char **argv, char **environ)
 {
 	char	*command;
 	char	**env;
 
+	(void)argc;
+	(void)argv;
 	signal(SIGINT, sigint);
 	signal(SIGQUIT, sigquit);
 	if (init_main(&g_prompt, environ, &env) == 0)
