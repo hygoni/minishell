@@ -6,7 +6,7 @@
 /*   By: hyeyoo <9hrack@gmail.com>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/24 14:59:42 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/07/14 14:37:55 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/02 16:33:52 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,8 @@ void			ft_putstr(char *str);
 void			ft_putchar(char c);
 void			ft_putstr_endl(char *str);
 void			ft_putstr_endl_fd(char *str, int fd);
-
-
-size_t	ft_strspn(const char *s1, const char *s2);
-size_t	ft_strcspn(const char *s1, const char *s2);
-char	*ft_strtok(char *str, const char *delim);
+size_t			ft_strspn(const char *s1, const char *s2);
+size_t			ft_strcspn(const char *s1, const char *s2);
+char			*ft_strtok(char *str, const char *delim);
 
 #endif
