@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 14:50:57 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/02 15:01:54 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/02 15:02:51 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	sigint(int signal)
 		kill(g_child, signal);
 	error_msg_param(EXE_NAME, g_process_name, "sigint");
 	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
-		write(1, g_prompt, ft_strlen(g_prompt));	
+		write(1, g_prompt, ft_strlen(g_prompt));
 }
 
 void	sigquit(int signal)
@@ -53,5 +53,5 @@ void	sigquit(int signal)
 		kill(g_child, signal);
 	error_msg_param(EXE_NAME, g_process_name, "sigquit");
 	if (ft_strcmp(EXE_NAME, g_process_name) == 0)
-		write(1, g_prompt, ft_strlen(g_prompt));	
+		write(1, g_prompt, ft_strlen(g_prompt));
 }
