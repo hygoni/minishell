@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:30:18 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/01 09:44:36 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/02 14:01:53 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,6 @@ int		pipe_recursive(int idx, int *child_fd, char ***argv, char ***env)
 		g_child = fork();
 		if (g_child == 0)
 			execute_pipe(idx - 1, child_fd, argv, env);
-		/*
-		else
-			wait(&g_status);
-			*/
 	}
 	return (0);
 }
@@ -75,16 +71,10 @@ int		execute_pipe(int idx, int *fd, char ***argv, char ***env)
 		exit(g_status);
 	new_argv = remove_redirection(argv[idx]);
 	if (idx != 0)
-	{
 		close(child_fd[1]);
-		init_redir_input(2, fd_arr, tmp, child_fd);
-		init_redir_output(1, fd_arr[1], tmp, fd);
-	}
-	else
-	{
-		init_redir_input(0, fd_arr, tmp, fd);
-		init_redir_output(1, fd_arr[1], tmp, fd);
-	}
+	init_redir_input(idx != 0 ? 2 : 0, fd_arr, tmp,
+			idx != 0 ? child_fd : fd);
+	init_redir_output(1, fd_arr[1], tmp, fd);
 	close(fd[0]);
 	execute_command(new_argv, env);
 	clean_arg(0, 0, &new_argv, 0);
