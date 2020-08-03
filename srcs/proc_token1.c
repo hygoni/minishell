@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/03 14:16:24 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/03 14:42:42 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "error.h"
 
-char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char *str)
+char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char **str)
 {
 	int		i;
 
@@ -23,23 +23,21 @@ char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char *str)
 	while (arg[i] != '\0')
 	{
 		if (arg[i] == '\'')
-			str = proc_single_quote(&i, arg, str);
+			*str = proc_single_quote(&i, arg, *str);
 		else if (arg[i] == '"')
-			str = proc_double_quote(&i, arg, str, env);
+			*str = proc_double_quote(&i, arg, *str, env);
 		else if (arg[i] == ' ')
-			str = proc_space(&i, arg, str, &argv);
+			*str = proc_space(&i, arg, *str, &argv);
 		else if (arg[i] == ';')
-			str = proc_semicolon(&i, str, &argv);
+			*str = proc_semicolon(&i, *str, &argv);
 		else if (arg[i] == '|')
-			str = proc_bar(&i, str, &argv);
+			*str = proc_bar(&i, *str, &argv);
 		else if (arg[i] == '*')
-			str = proc_wildcard(&i, str, &argv);
+			*str = proc_wildcard(&i, *str, &argv);
 		else
-			str = proc_str(&i, arg, str, env);
+			*str = proc_str(&i, arg, *str, env);
 		if (str == NULL)
 			return (NULL);
-		if (arg[i] == '\0')
-			argv = extend_argv(argv, str);
 	}
 	return (argv);
 }
@@ -53,7 +51,11 @@ char	**proc_quote_path(char *arg, char ***env)
 		return (NULL);
 	if ((str = ft_strdup("")) == NULL)
 		return (NULL);
-	argv = proc_quote_path_sub(argv, arg, env, str);
+	argv = proc_quote_path_sub(argv, arg, env, &str);
+	if (ft_strlen(str) > 0)
+		argv = extend_argv(argv, str);
+	else
+		free(str);
 	return (argv);
 }
 

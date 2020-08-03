@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:17:28 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/03 14:25:39 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/03 14:36:57 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ char	*proc_wildcard(int *idx, char *str, char ***argv)
 	if ((dir = opendir(".")) == NULL)
 		return (NULL);
 	while ((dirent = readdir(dir)) != NULL)
-		*argv = extend_argv(*argv, ft_strdup(dirent->d_name));
+	{
+		if (*(dirent->d_name) != '.')
+			*argv = extend_argv(*argv, ft_strdup(dirent->d_name));
+	}
 	closedir(dir);
 	to_free = str;
 	*idx = i;
