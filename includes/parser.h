@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/26 16:37:22 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/02 16:32:09 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/03 14:16:50 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	*proc_str(int *idx, char *arg, char *str, char ***env);
 
 char	*proc_single_quote(int *idx, char *arg, char *str);
 char	*proc_double_quote(int *idx, char *arg, char *str, char ***env);
+char	*proc_wildcard(int *idx, char *str, char ***argv);
 
 #endif

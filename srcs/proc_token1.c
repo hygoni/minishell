@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/02 16:31:36 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/03 14:16:24 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char *str)
 			str = proc_semicolon(&i, str, &argv);
 		else if (arg[i] == '|')
 			str = proc_bar(&i, str, &argv);
+		else if (arg[i] == '*')
+			str = proc_wildcard(&i, str, &argv);
 		else
 			str = proc_str(&i, arg, str, env);
 		if (str == NULL)
