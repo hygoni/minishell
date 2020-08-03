@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/01 09:45:39 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/02 14:52:28 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,12 @@ int		init_redir_output(int type, int *fd_out, int *tmp, int *fd)
 int		pipe_command(char ***argv, char ***env, int len, int *fd)
 {
 	pipe(fd);
-	//dup2(fd[0], 0);
 	g_child = fork();
 	if (g_child == 0)
 	{
 		execute_pipe(len - 2, fd, argv, env);
 		exit(0);
 	}
-//	wait(&status);
 	close(fd[1]);
 	return (0);
 }
@@ -106,6 +104,8 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	if (tmp[1] != -1)
 		close(tmp[1]);
 	clean_arg(0, 0, &new_argv, 0);
+	close(fd[0]);
+	close(fd[1]);
 	wait(&g_status);
 	return (0);
 }
