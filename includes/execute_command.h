@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/19 16:39:00 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/03 19:56:44 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/03 23:52:20 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ int		read_write_fd(int read_fd, int write_fd);
 int		execute_pipe(int idx, int *fd, char ***argv, char ***env);
 char	**extend_argv(char **argv, char *str);
 int		check_pipe(char ***argv, char ***env, int len, int *fd);
-void	close_pipe(int *fd, int *child);
+void	close_pipe(int *fd, int *child, int *tmp, int idx);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/03 19:59:45 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/03 23:57:39 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 extern pid_t	g_child;
 extern int		g_status;
 
-void	close_pipe(int *fd, int *child)
+void	close_pipe(int *fd, int *child, int *tmp, int type)
 {
 	if (fd[0] != -1)
 		close(fd[0]);
@@ -31,6 +31,15 @@ void	close_pipe(int *fd, int *child)
 		close(child[1]);
 	if (child[0] != -1)
 		close(child[0]);
+	if (tmp[0] != -1)
+		close(tmp[0]);
+	if (tmp[1] != -1)
+		close(tmp[1]);
+	if (type == 0)
+	{
+		close(0);
+		close(1);
+	}
 }
 
 int		init_redir_input(int type, int **fd_arr, int *tmp, int *fd)
@@ -111,7 +120,7 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	dup2(origin[0], 0);
 	dup2(origin[1], 1);
-	close_pipe(tmp, fd);
+	close_pipe(tmp, fd, origin, 1);
 	clean_arg(0, 0, &new_argv, 0);
 	wait(&g_status);
 	return (0);
