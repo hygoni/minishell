@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 14:50:57 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/02 15:02:51 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/10 21:16:39 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ extern char		*g_process_name;
 void	sigint(int signal)
 {
 	g_interrupted = 1;
-	g_status = 130;
+	g_status = 130 << 8;
 	ft_putchar(8);
 	ft_putchar(8);
 	ft_putchar('\n');
@@ -45,7 +45,7 @@ void	sigint(int signal)
 void	sigquit(int signal)
 {
 	g_interrupted = 1;
-	g_status = 131;
+	g_status = 131 << 8;
 	ft_putchar(8);
 	ft_putchar(8);
 	ft_putchar('\n');

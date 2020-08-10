@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/10 20:17:14 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/10 21:21:30 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,20 @@ char	*execute_binary_sub(char **argv, char **env)
 
 	if ((exe_path = find_exec(argv[0], env)) == NULL)
 	{
-		g_status = 127;
+		g_status = 127 << 8;
 		error_msg_param(EXE_NAME, argv[0], COMMAND_NOT_FOUND);
 		return (NULL);
 	}
 	return (exe_path);
 }
 
-void	execute_binary(char **argv, char **env)
+int		execute_binary(char **argv, char **env, pid_t child)
 {
-	pid_t	child;
 	char	*exe_path;
 	int		status;
 
 	if ((exe_path = execute_binary_sub(argv, env)) == NULL)
-		return ;
-	child = 1;
+		return (-1);
 	if (child != 0)
 	{
 		child = fork();
@@ -87,6 +85,7 @@ void	execute_binary(char **argv, char **env)
 			exit(errno);
 		}
 	}
+	return (1);
 }
 
 int		execute_command(char **argv, char ***env)
@@ -112,8 +111,8 @@ int		execute_command(char **argv, char ***env)
 		g_status = ft_unset(size, argv, env);
 	else if (ft_strcmp(command, "exit") == 0)
 		g_status = ft_exit(argv, size);
-	else
-		execute_binary(argv, *env);
+	else if (execute_binary(argv, *env, 1) < 0)
+		return (-1);
 	g_process_name = EXE_NAME;
 	return (1);
 }

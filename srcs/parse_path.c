@@ -6,13 +6,15 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:11:49 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/02 16:27:04 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/10 21:15:02 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "parser.h"
 #include <stdlib.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include "ft_environ.h"
 
 extern	int		g_status;
@@ -55,7 +57,9 @@ char	*parse_path_sub(int *idx, char *arg, char ***env)
 		return (NULL);
 	token = get_env_value(*env, key);
 	if (ft_strcmp(key, "?") == 0)
-		token = ft_itoa(g_status);
+	{
+		token = ft_itoa(((g_status >> 8) & 255));
+	}
 	else
 		token = (token == NULL) ? ft_strdup("") : ft_strdup(token);
 	*idx = i;

@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/03 14:42:42 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/10 20:28:12 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char **str)
 			*str = proc_wildcard(&i, *str, &argv);
 		else
 			*str = proc_str(&i, arg, *str, env);
-		if (str == NULL)
+		if (*str == NULL)
 			return (NULL);
 	}
 	return (argv);
@@ -52,6 +52,8 @@ char	**proc_quote_path(char *arg, char ***env)
 	if ((str = ft_strdup("")) == NULL)
 		return (NULL);
 	argv = proc_quote_path_sub(argv, arg, env, &str);
+	if (str == NULL || argv == NULL)
+		return (NULL);
 	if (ft_strlen(str) > 0)
 		argv = extend_argv(argv, str);
 	else

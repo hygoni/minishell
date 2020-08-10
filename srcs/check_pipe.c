@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/27 23:02:43 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/03 23:57:39 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/10 20:47:53 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,12 @@ int		check_pipe(char ***argv, char ***env, int len, int *fd)
 	init_redir_input(len, fd_arr, tmp, fd);
 	init_redir_output(0, fd_arr[1], tmp, fd);
 	close(fd[1]);
-	execute_command(new_argv, env);
+	len = execute_command(new_argv, env);
 	clear_redir_fd(fd_arr[0], fd_arr[1]);
 	dup2(origin[0], 0);
 	dup2(origin[1], 1);
 	close_pipe(tmp, fd, origin, 1);
 	clean_arg(0, 0, &new_argv, 0);
-	wait(&g_status);
+	(len >= 0) ? wait(&g_status) : 0;
 	return (0);
 }
