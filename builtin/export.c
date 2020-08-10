@@ -6,7 +6,7 @@
 /*   By: jinwkim <jinwkim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 05:33:44 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/28 20:45:44 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/10 16:52:26 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int			ft_export(int argc, char **argv, char ***env)
 
 	idx = 0;
 	if (argc == 1)
-		return (ft_env(*env));
+		return (export_no_arg(argv[0], *env));
 	while (idx < argc)
 	{
 		key = 0;

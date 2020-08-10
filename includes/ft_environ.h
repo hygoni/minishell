@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:30:41 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/07/30 17:46:20 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:55:01 by jinwkim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,8 @@ int		ft_unset(int argc, char **argv, char ***env);
 int		ft_env(char **env);
 int		check_validate(char *str);
 void	ft_export_one(char *key, char *value, char **env);
+int		export_no_arg(char *name, char **env);
+int		set_key(char *str, char **key);
+int		set_value(char *str, char **value);
 
 #endif
