@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/13 21:44:14 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 23:14:58 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**proc_quote_path(char *arg, char ***env)
 	len = 0;
 	while (argv[len] != NULL)
 		len++;
-	if (*(argv[len - 1]) == '|')
+	if (len != 0 && *(argv[len - 1]) == '|')
 	{
 		free_2d(argv);
 		error_msg_parse("|");

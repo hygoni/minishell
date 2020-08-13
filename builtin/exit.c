@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 16:15:30 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/10 20:19:34 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/13 23:02:40 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 extern int g_status;
 
-void	ft_exit(char **argv, int size)
+int		ft_exit(char **argv, int size)
 {
 	int		i;
 	char	*status;
@@ -27,7 +27,7 @@ void	ft_exit(char **argv, int size)
 	if (size > 2)
 	{
 		error_msg("exit", "too many arguments");
-		return ;
+		return (1 << 8);
 	}
 	i = 0;
 	while (status[i] != '\0')
@@ -35,10 +35,11 @@ void	ft_exit(char **argv, int size)
 		if (status[i] < '0' || status[i] > '9')
 		{
 			error_msg_param("exit", status, "numeric argument required");
-			break ;
+			exit(255);
 		}
 		i++;
 	}
 	g_status = (status == NULL) ? 0 : ft_atoi(status);
 	exit(g_status);
+	return (g_status);
 }
