@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 19:37:25 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/10 21:21:30 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/13 23:02:36 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int		execute_command(char **argv, char ***env)
 	else if (ft_strcmp(command, "unset") == 0)
 		g_status = ft_unset(size, argv, env);
 	else if (ft_strcmp(command, "exit") == 0)
-		g_status = ft_exit(argv, size);
+		return ((g_status = ft_exit(argv, size)) ? -1 : 0);
 	else if (execute_binary(argv, *env, 1) < 0)
 		return (-1);
 	g_process_name = EXE_NAME;
