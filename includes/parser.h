@@ -6,7 +6,7 @@
 /*   By: jinwkim <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/26 16:37:22 by jinwkim           #+#    #+#             */
-/*   Updated: 2020/08/03 14:16:50 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 21:44:35 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@ char	*parse_path(char *arg, char ***env);
 int		find(char **argv, char *find);
 char	**proc_quote_path(char *arg, char ***env);
 
-char	*proc_bar(int *idx, char *str, char ***argv);
-char	*proc_semicolon(int *idx, char *str, char ***argv);
+char	*proc_bar(int *idx, char *str, char ***argv, int len);
+char	*proc_semicolon(int *idx, char *str, char ***argv, int len);
 char	*proc_space(int *idx, char *arg, char *str, char ***argv);
 char	*proc_str(int *idx, char *arg, char *str, char ***env);
 
 char	*proc_single_quote(int *idx, char *arg, char *str);
 char	*proc_double_quote(int *idx, char *arg, char *str, char ***env);
 char	*proc_wildcard(int *idx, char *str, char ***argv);
+int		len_2d(char **argv);
 
 #endif

@@ -6,15 +6,15 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 20:41:11 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/03 20:41:12 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 21:43:59 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FREE_H
 # define FREE_H
 
-void	free_2d(char **argv);
-void	free_2d_len(char **argv, int len);
-void	free_3d(char ***argv);
+int		free_2d(char **argv);
+int		free_2d_len(char **argv, int len);
+int		free_3d(char ***argv);
 
 #endif
