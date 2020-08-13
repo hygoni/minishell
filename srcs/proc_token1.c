@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/10 20:28:12 by jinwkim          ###   ########.fr       */
+/*   Updated: 2020/08/13 21:20:43 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,9 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
 	else
-	{
 		free(str);
+	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0)
+	{
 		free(semicolon);
 		error_msg_parse(semicolon);
 		return (NULL);
@@ -113,6 +114,10 @@ char	*proc_bar(int *idx, char *str, char ***argv)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
+	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0) {
+			error_msg_parse("|");
+			return (NULL);
+	}
 	if ((bar = ft_strdup("|")) == NULL)
 		return (NULL);
 	if ((*argv = extend_argv(*argv, bar)) == NULL)
