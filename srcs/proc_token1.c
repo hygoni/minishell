@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/13 21:38:47 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 21:44:14 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,15 @@ char	**proc_quote_path_sub(char **argv, char *arg, char ***env, char **str)
 		else if (arg[i] == ' ')
 			*str = proc_space(&i, arg, *str, &argv);
 		else if (arg[i] == ';')
-			*str = proc_semicolon(&i, *str, &argv);
+			*str = proc_semicolon(&i, *str, &argv, len_2d(argv));
 		else if (arg[i] == '|')
-			*str = proc_bar(&i, *str, &argv);
+			*str = proc_bar(&i, *str, &argv, len_2d(argv));
 		else if (arg[i] == '*')
 			*str = proc_wildcard(&i, *str, &argv);
 		else
 			*str = proc_str(&i, arg, *str, env);
-		if (*str == NULL) {
-			free_2d(argv);
+		if (*str == NULL && free_2d(argv))
 			return (NULL);
-		}
 	}
 	return (argv);
 }
@@ -65,7 +63,8 @@ char	**proc_quote_path(char *arg, char ***env)
 	len = 0;
 	while (argv[len] != NULL)
 		len++;
-	if (*(argv[len - 1]) == '|') {
+	if (*(argv[len - 1]) == '|')
+	{
 		free_2d(argv);
 		error_msg_parse("|");
 		return (NULL);
@@ -89,10 +88,9 @@ char	*proc_space(int *idx, char *arg, char *str, char ***argv)
 	return (str);
 }
 
-char	*proc_semicolon(int *idx, char *str, char ***argv)
+char	*proc_semicolon(int *idx, char *str, char ***argv, int len)
 {
 	int			i;
-	int			len;
 	char		*semicolon;
 
 	i = *idx;
@@ -102,10 +100,8 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
-	len = 0;
-	while ((*argv)[len] != NULL)
-		len++;
-	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 || *((*argv)[len - 1]) == ';')
+	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 ||
+			*((*argv)[len - 1]) == ';')
 	{
 		free(semicolon);
 		error_msg_parse(semicolon);
@@ -120,23 +116,21 @@ char	*proc_semicolon(int *idx, char *str, char ***argv)
 	return (str);
 }
 
-char	*proc_bar(int *idx, char *str, char ***argv)
+char	*proc_bar(int *idx, char *str, char ***argv, int len)
 {
 	int			i;
 	char		*bar;
-	int			len;
 
 	i = *idx;
 	if (ft_strlen(str) > 0)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
-	len = 0;
-	while ((*argv)[len] != NULL)
-		len++;
-	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 || *((*argv)[len - 1]) == '|') {
-			error_msg_parse("|");
-			return (NULL);
+	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 ||
+			*((*argv)[len - 1]) == '|')
+	{
+		error_msg_parse("|");
+		return (NULL);
 	}
 	if ((bar = ft_strdup("|")) == NULL)
 		return (NULL);

@@ -6,13 +6,13 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/28 21:08:56 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/13 21:23:43 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 21:43:50 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-void	free_2d(char **argv)
+int		free_2d(char **argv)
 {
 	int	i;
 
@@ -23,9 +23,10 @@ void	free_2d(char **argv)
 		i++;
 	}
 	free(argv);
+	return (1);
 }
 
-void	free_2d_len(char **argv, int len)
+int		free_2d_len(char **argv, int len)
 {
 	int	i;
 
@@ -37,9 +38,10 @@ void	free_2d_len(char **argv, int len)
 		i++;
 	}
 	free(argv);
+	return (1);
 }
 
-void	free_3d(char ***argv)
+int		free_3d(char ***argv)
 {
 	int	i;
 
@@ -50,4 +52,5 @@ void	free_3d(char ***argv)
 		i++;
 	}
 	free(argv);
+	return (1);
 }

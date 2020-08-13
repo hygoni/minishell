@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:17:28 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/03 14:36:57 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/08/13 21:42:52 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,16 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/types.h>
+
+int		len_2d(char **argv)
+{
+	int len;
+
+	len = 0;
+	while (argv[len] != NULL)
+		len++;
+	return (len);
+}
 
 char	*proc_str(int *idx, char *arg, char *str, char ***env)
 {
