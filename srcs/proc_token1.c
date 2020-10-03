@@ -6,7 +6,7 @@
 /*   By: hyeyoo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/02 16:14:58 by hyeyoo            #+#    #+#             */
-/*   Updated: 2020/08/13 23:34:27 by hyeyoo           ###   ########.fr       */
+/*   Updated: 2020/10/04 02:52:46 by hyeyoo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ char	*proc_semicolon(int *idx, char *str, char ***argv, int len)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
+    len = len_2d(*argv);
 	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 ||
 			*((*argv)[len - 1]) == ';')
 	{
@@ -126,6 +127,7 @@ char	*proc_bar(int *idx, char *str, char ***argv, int len)
 		*argv = extend_argv(*argv, str);
 	else
 		free(str);
+    len = len_2d(*argv);
 	if ((*argv)[0] == NULL || ft_strlen((*argv)[0]) == 0 ||
 			*((*argv)[len - 1]) == '|')
 	{
