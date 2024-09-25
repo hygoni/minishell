@@ -1,5 +1,5 @@
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=4096
+CFLAGS = -Wall -Wextra -D BUFFER_SIZE=4096
 SRCS = ${addprefix srcs/, ${shell ls srcs | grep '\.c'}} ${addprefix builtin/, ${shell ls builtin | grep '\.c'}}
 OBJS = ${SRCS:.c=.o}
 CC = gcc
